@@ -1242,8 +1242,8 @@ ul.s-list > li::before{
 @media(max-width:768px){.charts-grid{grid-template-columns:1fr;}.chart-card-wide{grid-column:span 1;}.fw-compare{flex-direction:column;}.risk-split{flex-direction:column;}.scope-boxes{flex-direction:column;}.scope-arrow{transform:rotate(90deg);}.sdg-grid{grid-template-columns:repeat(6,1fr);}.im-grid{grid-template-columns:repeat(2,1fr);}.milestones{flex-direction:column;}.milestones::before{display:none;}}
 @media(max-width:480px){.sdg-grid{grid-template-columns:repeat(4,1fr);}.charts-grid{grid-template-columns:1fr;}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
+
 <body>
 <div id="app">
 
@@ -1620,7 +1620,48 @@ ul.s-list > li::before{
     </div>
 
 
-    <!-- ══ PODCAST PAGE ══════════════════════════ -->
+    
+<div class="reader-tabs">
+        <button class="reader-tab active" onclick="switchReaderTab('read')">📖 課文閱讀</button>
+        <button class="reader-tab" onclick="switchReaderTab('practice')">✏️ 隨堂練習 <span class="rq-badge" id="rq-badge"></span></button>
+      </div>
+      <div id="reader-read-view" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+        <div class="reader-layout" id="reader-layout">
+          <div class="reader-toc" id="reader-toc"></div>
+          <div class="reader-body" id="reader-body">
+            <p style="color:var(--gray);text-align:center;padding:40px;">請從左側目錄選擇章節</p>
+          </div>
+        </div>
+      </div>
+      <div id="reader-practice-view" style="display:none;">
+        <div class="quiz-controls">
+          <label>章節：</label>
+          <select id="rq-chapter-filter" onchange="updateRqSections()">
+            <option value="all">全部章節</option>
+          </select>
+          <label>小節：</label>
+          <select id="rq-section-filter">
+            <option value="all">全部小節</option>
+          </select>
+          <button class="btn-go" onclick="startReaderQuiz()">🚀 開始練習</button>
+          <button class="btn-reset" onclick="resetReaderQuiz()">🔄 重置</button>
+          <span id="rq-stat" style="font-size:.8rem;color:var(--gray);margin-left:auto;"></span>
+        </div>
+        <div class="prog-bar-wrap" id="rq-prog-wrap" style="display:none;">
+          <div class="prog-bar-outer"><div class="prog-bar-inner" id="rq-prog" style="width:0%"></div></div>
+          <div class="prog-txt"><span id="rq-prog-txt">0 / 0 題</span><span id="rq-score-txt"></span></div>
+        </div>
+        <div id="rq-area">
+          <p style="text-align:center;color:var(--gray);padding:40px;font-size:.9rem;">選擇章節後按「開始練習」進行隨堂測驗</p>
+        </div>
+      </div>
+      <button id="mobile-toc-btn" onclick="toggleMobileToc()">📋</button>
+      <div id="mobile-toc-panel"></div>
+    </div>
+
+    <!-- ══ NOTES PAGE ════════════════════════ -->
+    <div 
+<!-- ══ PODCAST PAGE ══════════════════════════ -->
     <div id="page-podcast" class="page">
       <div class="pod-page-header">
         <h2>🎧 Podcast 聆聽</h2>
@@ -2096,7 +2137,125 @@ ul.s-list > li::before{
     </div><!-- /charts-grid -->
   </div><!-- /charts-page-wrap -->
 </div><!-- /page-charts -->
+
+id="page-notes" class="page">
+      <div class="filter-bar" id="notes-filters"></div>
+      <div class="cards-grid" id="notes-cards"></div>
+    </div>
+
+    <!-- ══ QUIZ PAGE ═════════════════════════ -->
+    <div id="page-quiz" class="page">
+      <div class="quiz-controls">
+        <label>年次篩選：</label>
+        <select id="quiz-exam-filter">
+          <option value="all">全部年次</option>
+          <option value="113-1">113-1</option><option value="113-2">113-2</option>
+          <option value="113-3">113-3</option><option value="113-4">113-4</option>
+          <option value="113-5">113-5</option>
+          <option value="114-1">114-1</option><option value="114-2">114-2</option>
+          <option value="114-3">114-3</option><option value="114-4">114-4</option>
+          <option value="114-4高雄">114-4高雄</option>
+          <option value="114-5">114-5</option><option value="114-6">114-6</option>
+          <option value="115-1">115-1</option>
+        </select>
+        <label>題數：</label>
+        <select id="quiz-count">
+          <option value="20">20 題</option>
+          <option value="40">40 題</option>
+          <option value="80">80 題</option>
+          <option value="999">全部</option>
+        </select>
+        <label>順序：</label>
+        <select id="quiz-order">
+          <option value="rand">隨機</option>
+          <option value="seq">依序</option>
+        </select>
+        <button class="btn-go" onclick="startQuiz()">🚀 開始練習</button>
+        <button class="btn-reset" onclick="resetQuiz()">🔄 重置</button>
+        <span id="quiz-stat" style="font-size:.8rem;color:var(--gray);margin-left:auto;"></span>
+      </div>
+      <div class="prog-bar-wrap" id="quiz-prog-wrap" style="display:none;">
+        <div class="prog-bar-outer"><div class="prog-bar-inner" id="quiz-prog" style="width:0%"></div></div>
+        <div class="prog-txt"><span id="quiz-prog-txt">0 / 0 題</span><span id="quiz-score-txt"></span></div>
+      </div>
+      <div id="quiz-area">
+        <p style="text-align:center;color:var(--gray);padding:40px;font-size:.9rem;">選擇設定後按「開始練習」</p>
+      </div>
+    </div>
+
+    <!-- ══ EXAM PAGE ══════════════════════════ -->
+    <div id="page-exam" class="page">
+      <div id="exam-setup">
+        <div class="quiz-controls">
+          <span style="font-weight:700;color:var(--green);">📝 模擬考試</span>
+          <label>題數：</label>
+          <select id="exam-count">
+            <option value="80">80 題（正式考試）</option>
+            <option value="40">40 題（半場）</option>
+            <option value="20">20 題（快速）</option>
+          </select>
+          <button class="btn-go" onclick="startExam()">▶ 開始計時考試</button>
+        </div>
+        <div style="background:var(--op);border-radius:var(--radius);padding:16px 20px;margin-top:12px;font-size:.88rem;line-height:1.8;color:#5d4037;">
+          ⏱ 考試時間：<strong>90 分鐘</strong> · 每題 1.25 分 · 滿分 100 分 · <strong>70 分</strong>合格<br>
+          📋 考試期間不顯示答案，交卷後才顯示完整成績單與解析
+        </div>
+        <div id="exam-history-summary" style="margin-top:12px;"></div>
+      </div>
+      <div id="exam-running" style="display:none;">
+        <div class="exam-timer">
+          <span>模擬考試 <span id="exam-q-count"></span></span>
+          <span id="exam-timer" class="timer-display">90:00</span>
+          <button onclick="submitExam()" style="padding:6px 16px;border-radius:8px;border:none;background:var(--red);color:#fff;cursor:pointer;font-weight:700;font-size:.85rem;">交卷</button>
+        </div>
+        <div class="prog-bar-wrap">
+          <div class="prog-bar-outer"><div class="prog-bar-inner" id="exam-prog" style="width:0%"></div></div>
+          <div class="prog-txt"><span id="exam-prog-txt"></span><span id="exam-answered-txt"></span></div>
+        </div>
+        <div id="exam-area"></div>
+        <div class="q-nav" style="margin-top:8px;">
+          <button class="btn-prev" onclick="examPrev()">← 上一題</button>
+          <span id="exam-pos-txt" style="font-size:.83rem;color:var(--gray);"></span>
+          <button class="btn-next" onclick="examNext()">下一題 →</button>
+        </div>
+      </div>
+      <div id="exam-result" style="display:none;"></div>
+    </div>
+
+    <!-- ══ PROGRESS PAGE ═════════════════════ -->
+    <div id="page-progress" class="page">
+      <div class="progress-grid">
+        <div class="prog-card">
+          <h3>總體正確率</h3>
+          <div class="donut-wrap" id="donut-overall"></div>
+          <p id="overall-desc" style="text-align:center;font-size:.83rem;color:var(--gray);"></p>
+        </div>
+        <div class="prog-card">
+          <h3>考試紀錄</h3>
+          <div class="history-list" id="history-list"></div>
+        </div>
+      </div>
+      <div class="prog-card" style="margin-bottom:16px;">
+        <h3>年次題庫分佈</h3>
+        <div class="bar-chart" id="bar-chart"></div>
+        <p id="bar-chart-note" style="font-size:.75rem;color:var(--gray);margin-top:6px;text-align:right;"></p>
+      </div>
+      <div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+        <p style="font-size:.78rem;color:var(--gray);margin-bottom:8px;">⚠️ 清除後無法復原，所有練習紀錄將永久刪除</p>
+        <button onclick="clearProgress()" style="padding:6px 16px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;color:var(--gray);cursor:pointer;font-size:.78rem;">清除所有進度</button>
+      </div>
+    </div>
+
+
+    <!-- ══ CHEATSHEET PAGE ══════════════════════════ -->
+    <div id="page-cheatsheet" class="page">
+      <div style="background:linear-gradient(135deg,#1b5e20,#2e7d32);color:#fff;border-radius:16px;padding:22px 24px;margin-bottom:20px;">
+        <h2 style="font-size:1.3rem;margin-bottom:4px;">📋 考前速覽</h2>
+        <p style="font-size:.85rem;opacity:.88">JY筆記 第五章重點統整 · 百分比 · 金錢 · 溫度 · 時間 · 名詞</p>
+      </div>
+
 <script>
+
 // ════════════════════════════════════════════════
 //  DATA
 // ════════════════════════════════════════════════
@@ -5838,162 +5997,7 @@ function _initChartsPage(){
 renderHome();
 renderPodcastList(); // 預先填入 Podcast 列表
 
+
 </script>
-
-
 </body>
 </html>
-<div class="reader-tabs">
-        <button class="reader-tab active" onclick="switchReaderTab('read')">📖 課文閱讀</button>
-        <button class="reader-tab" onclick="switchReaderTab('practice')">✏️ 隨堂練習 <span class="rq-badge" id="rq-badge"></span></button>
-      </div>
-      <div id="reader-read-view" style="flex:1;display:flex;flex-direction:column;min-height:0;">
-        <div class="reader-layout" id="reader-layout">
-          <div class="reader-toc" id="reader-toc"></div>
-          <div class="reader-body" id="reader-body">
-            <p style="color:var(--gray);text-align:center;padding:40px;">請從左側目錄選擇章節</p>
-          </div>
-        </div>
-      </div>
-      <div id="reader-practice-view" style="display:none;">
-        <div class="quiz-controls">
-          <label>章節：</label>
-          <select id="rq-chapter-filter" onchange="updateRqSections()">
-            <option value="all">全部章節</option>
-          </select>
-          <label>小節：</label>
-          <select id="rq-section-filter">
-            <option value="all">全部小節</option>
-          </select>
-          <button class="btn-go" onclick="startReaderQuiz()">🚀 開始練習</button>
-          <button class="btn-reset" onclick="resetReaderQuiz()">🔄 重置</button>
-          <span id="rq-stat" style="font-size:.8rem;color:var(--gray);margin-left:auto;"></span>
-        </div>
-        <div class="prog-bar-wrap" id="rq-prog-wrap" style="display:none;">
-          <div class="prog-bar-outer"><div class="prog-bar-inner" id="rq-prog" style="width:0%"></div></div>
-          <div class="prog-txt"><span id="rq-prog-txt">0 / 0 題</span><span id="rq-score-txt"></span></div>
-        </div>
-        <div id="rq-area">
-          <p style="text-align:center;color:var(--gray);padding:40px;font-size:.9rem;">選擇章節後按「開始練習」進行隨堂測驗</p>
-        </div>
-      </div>
-      <button id="mobile-toc-btn" onclick="toggleMobileToc()">📋</button>
-      <div id="mobile-toc-panel"></div>
-    </div>
-
-    <!-- ══ NOTES PAGE ════════════════════════ -->
-    <div id="page-notes" class="page">
-      <div class="filter-bar" id="notes-filters"></div>
-      <div class="cards-grid" id="notes-cards"></div>
-    </div>
-
-    <!-- ══ QUIZ PAGE ═════════════════════════ -->
-    <div id="page-quiz" class="page">
-      <div class="quiz-controls">
-        <label>年次篩選：</label>
-        <select id="quiz-exam-filter">
-          <option value="all">全部年次</option>
-          <option value="113-1">113-1</option><option value="113-2">113-2</option>
-          <option value="113-3">113-3</option><option value="113-4">113-4</option>
-          <option value="113-5">113-5</option>
-          <option value="114-1">114-1</option><option value="114-2">114-2</option>
-          <option value="114-3">114-3</option><option value="114-4">114-4</option>
-          <option value="114-4高雄">114-4高雄</option>
-          <option value="114-5">114-5</option><option value="114-6">114-6</option>
-          <option value="115-1">115-1</option>
-        </select>
-        <label>題數：</label>
-        <select id="quiz-count">
-          <option value="20">20 題</option>
-          <option value="40">40 題</option>
-          <option value="80">80 題</option>
-          <option value="999">全部</option>
-        </select>
-        <label>順序：</label>
-        <select id="quiz-order">
-          <option value="rand">隨機</option>
-          <option value="seq">依序</option>
-        </select>
-        <button class="btn-go" onclick="startQuiz()">🚀 開始練習</button>
-        <button class="btn-reset" onclick="resetQuiz()">🔄 重置</button>
-        <span id="quiz-stat" style="font-size:.8rem;color:var(--gray);margin-left:auto;"></span>
-      </div>
-      <div class="prog-bar-wrap" id="quiz-prog-wrap" style="display:none;">
-        <div class="prog-bar-outer"><div class="prog-bar-inner" id="quiz-prog" style="width:0%"></div></div>
-        <div class="prog-txt"><span id="quiz-prog-txt">0 / 0 題</span><span id="quiz-score-txt"></span></div>
-      </div>
-      <div id="quiz-area">
-        <p style="text-align:center;color:var(--gray);padding:40px;font-size:.9rem;">選擇設定後按「開始練習」</p>
-      </div>
-    </div>
-
-    <!-- ══ EXAM PAGE ══════════════════════════ -->
-    <div id="page-exam" class="page">
-      <div id="exam-setup">
-        <div class="quiz-controls">
-          <span style="font-weight:700;color:var(--green);">📝 模擬考試</span>
-          <label>題數：</label>
-          <select id="exam-count">
-            <option value="80">80 題（正式考試）</option>
-            <option value="40">40 題（半場）</option>
-            <option value="20">20 題（快速）</option>
-          </select>
-          <button class="btn-go" onclick="startExam()">▶ 開始計時考試</button>
-        </div>
-        <div style="background:var(--op);border-radius:var(--radius);padding:16px 20px;margin-top:12px;font-size:.88rem;line-height:1.8;color:#5d4037;">
-          ⏱ 考試時間：<strong>90 分鐘</strong> · 每題 1.25 分 · 滿分 100 分 · <strong>70 分</strong>合格<br>
-          📋 考試期間不顯示答案，交卷後才顯示完整成績單與解析
-        </div>
-        <div id="exam-history-summary" style="margin-top:12px;"></div>
-      </div>
-      <div id="exam-running" style="display:none;">
-        <div class="exam-timer">
-          <span>模擬考試 <span id="exam-q-count"></span></span>
-          <span id="exam-timer" class="timer-display">90:00</span>
-          <button onclick="submitExam()" style="padding:6px 16px;border-radius:8px;border:none;background:var(--red);color:#fff;cursor:pointer;font-weight:700;font-size:.85rem;">交卷</button>
-        </div>
-        <div class="prog-bar-wrap">
-          <div class="prog-bar-outer"><div class="prog-bar-inner" id="exam-prog" style="width:0%"></div></div>
-          <div class="prog-txt"><span id="exam-prog-txt"></span><span id="exam-answered-txt"></span></div>
-        </div>
-        <div id="exam-area"></div>
-        <div class="q-nav" style="margin-top:8px;">
-          <button class="btn-prev" onclick="examPrev()">← 上一題</button>
-          <span id="exam-pos-txt" style="font-size:.83rem;color:var(--gray);"></span>
-          <button class="btn-next" onclick="examNext()">下一題 →</button>
-        </div>
-      </div>
-      <div id="exam-result" style="display:none;"></div>
-    </div>
-
-    <!-- ══ PROGRESS PAGE ═════════════════════ -->
-    <div id="page-progress" class="page">
-      <div class="progress-grid">
-        <div class="prog-card">
-          <h3>總體正確率</h3>
-          <div class="donut-wrap" id="donut-overall"></div>
-          <p id="overall-desc" style="text-align:center;font-size:.83rem;color:var(--gray);"></p>
-        </div>
-        <div class="prog-card">
-          <h3>考試紀錄</h3>
-          <div class="history-list" id="history-list"></div>
-        </div>
-      </div>
-      <div class="prog-card" style="margin-bottom:16px;">
-        <h3>年次題庫分佈</h3>
-        <div class="bar-chart" id="bar-chart"></div>
-        <p id="bar-chart-note" style="font-size:.75rem;color:var(--gray);margin-top:6px;text-align:right;"></p>
-      </div>
-      <div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-        <p style="font-size:.78rem;color:var(--gray);margin-bottom:8px;">⚠️ 清除後無法復原，所有練習紀錄將永久刪除</p>
-        <button onclick="clearProgress()" style="padding:6px 16px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;color:var(--gray);cursor:pointer;font-size:.78rem;">清除所有進度</button>
-      </div>
-    </div>
-
-
-    <!-- ══ CHEATSHEET PAGE ══════════════════════════ -->
-    <div id="page-cheatsheet" class="page">
-      <div style="background:linear-gradient(135deg,#1b5e20,#2e7d32);color:#fff;border-radius:16px;padding:22px 24px;margin-bottom:20px;">
-        <h2 style="font-size:1.3rem;margin-bottom:4px;">📋 考前速覽</h2>
-        <p style="font-size:.85rem;opacity:.88">JY筆記 第五章重點統整 · 百分比 · 金錢 · 溫度 · 時間 · 名詞</p>
-      </div>
