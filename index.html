@@ -4145,7 +4145,8 @@ function _questionCardHtml({ q, current, total, answered, userAnswer, letters, t
        ${q.x ? `<div style="margin-top:6px;font-size:.84rem;color:#37474f">【解析】${_safeText(q.x)}</div>`
               : '<div style="margin-top:4px;font-size:.78rem;color:var(--gray)">（本題無詳細解析）</div>'}`
     : '';
-  if(answered && userAnswer !== undefined && userAnswer !== q.a) expHtml += _relatedCourseBtn(q);
+  const courseBtn = (answered && userAnswer !== undefined)
+    ? _relatedCourseBtn(q) : '';
   const navNext = current < total - 1
     ? `<button class="btn-next" onclick="${onNext}()">下一題 →</button>`
     : `<button class="btn-submit" onclick="${onSubmit}()">📊 查看成績</button>`;
@@ -4160,6 +4161,7 @@ function _questionCardHtml({ q, current, total, answered, userAnswer, letters, t
       <div class="options">${optsHtml}</div>
       ${confirmHtml}
       <div class="exp-box${answered ? ' show' : ''}">${expHtml}</div>
+      ${courseBtn}
     </div>
     <div class="q-nav">
       <button class="btn-prev" onclick="${onPrev}()" ${current===0?'disabled style="opacity:.4"':''}>← 上一題</button>
@@ -4689,16 +4691,14 @@ function _relatedCourseBtn(q){
   const chKey = _getChKeyFromQ(q);
   const labels = {'ch1':'第一章','ch2':'第二章','ch3':'第三章','ch4':'第四章'};
   if(chKey){
-    // 官方題庫 / 隨堂練習：精準跳到對應章節
     return `<button type="button" class="related-course-btn"
       onclick="openRelatedCourse('${chKey}')">
-      📖 前往 ${labels[chKey]} 課文複習
+      📖 ${labels[chKey]} 課文複習
     </button>`;
   } else {
-    // 考古題：無章節資訊，跳課文閱讀首頁
     return `<button type="button" class="related-course-btn"
       onclick="goPage('reader')">
-      📖 前往課文複習
+      📖 課文複習
     </button>`;
   }
 }
@@ -5150,13 +5150,14 @@ function submitExam(){
   saveProgress(p);
   const L          = ['A','B','C','D'];
   const wrongItems = examQ.map((q, i) => {
-    if(examAns[i] === q.a) return '';
+    const isCorrect = examAns[i] === q.a;
+    if(examAns[i] === undefined) return ''; // 未作答略過
     const ua = examAns[i];
     return `<div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;font-size:.83rem;">
-      <div style="font-weight:600;margin-bottom:6px;">Q${i+1}. ${_safeText(q.s.slice(0, 80))}…</div>
-      ${ua !== undefined
+      <div style="font-weight:600;margin-bottom:6px;">${isCorrect ? '✅' : '❌'} Q${i+1}. ${_safeText(q.s.slice(0, 80))}…</div>
+      ${!isCorrect
         ? `<div style="color:var(--color-danger)">✗ 你的答案：${L[ua]}. ${_safeText(q.o[ua])}</div>`
-        : '<div style="color:var(--gray)">（未作答）</div>'}
+        : ''}
       <div style="color:var(--color-success)">✓ 正確答案：${L[q.a]}. ${_safeText(q.o[q.a])}</div>
       ${q.x ? `<div style="margin-top:6px;font-size:.8rem;color:#37474f;">【解析】${_safeText(q.x)}</div>` : ''}
       ${_relatedCourseBtn(q)}
@@ -5180,7 +5181,7 @@ function submitExam(){
         <button type="button" style="background:var(--color-success);color:#fff;" onclick="restartExam()">🔄 再考一次</button>
         <button type="button" style="background:var(--lgray);color:var(--gray);" onclick="goPage('${PAGES.QUIZ}')">🎯 題庫練習</button>
       </div>
-      ${wrongItems ? `<div style="margin-top:20px;text-align:left;"><h4 style="margin-bottom:10px;color:var(--color-danger);">❌ 錯誤題目解析 (${total-correct} 題)</h4>${wrongItems}</div>` : ''}
+      ${wrongItems ? `<div style="margin-top:20px;text-align:left;"><h4 style="margin-bottom:10px;color:var(--gray);">📋 全部題目解析 (${total} 題)</h4>${wrongItems}</div>` : ''}
     </div>`;
 }
 
@@ -5320,6 +5321,14 @@ function renderTbQ(){
   }).join('');
   // 確認按鈕區
   const confirmArea = document.getElementById('tb-confirm-area');
+
+  const expEl = document.getElementById('tb-explanation');
+  expEl.className = 'tb-explanation' + (answered !== null ? ' show' : '');
+  expEl.innerHTML = answered !== null
+    ? `<b>✅ 正確答案：</b>${labels[q.a]} ${_safeText(q.o[q.a])}` +
+      (q.x ? `<br><b>【解析】</b>${_safeText(q.x)}` : '')
+    : '';
+  // 課文按鈕獨立顯示在 tb-confirm-area
   if(confirmArea){
     if(answered === null && tbPending !== null){
       confirmArea.innerHTML =
@@ -5327,17 +5336,13 @@ function renderTbQ(){
           <button type="button" class="btn-confirm-ans" onclick="tbConfirm()">✅ 確認答案</button>
           <button type="button" class="btn-change-ans"  onclick="tbClearPending()">↩ 重新選擇</button>
         </div>`;
+    } else if(answered !== null){
+      // 答題後（不論對錯）顯示課文按鈕
+      confirmArea.innerHTML = _relatedCourseBtn(q);
     } else {
       confirmArea.innerHTML = '';
     }
   }
-  const expEl = document.getElementById('tb-explanation');
-  expEl.className = 'tb-explanation' + (answered !== null ? ' show' : '');
-  expEl.innerHTML = answered !== null
-    ? `<b>✅ 正確答案：</b>${labels[q.a]} ${_safeText(q.o[q.a])}` +
-      (q.x ? `<br><b>【解析】</b>${_safeText(q.x)}` : '') +
-      (answered !== q.a ? _relatedCourseBtn(q) : '')
-    : '';
   document.getElementById('tb-prev-btn').style.display = tbIdx > 0 ? '' : 'none';
   const nextBtn = document.getElementById('tb-next-btn');
   nextBtn.style.display = answered !== null ? '' : 'none';
