@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+flex:1;overflow-y:auto;}<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -523,10 +523,10 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
    桌機版 (≥ 1025px)：側欄底部嵌入播放器
 ════════════════════════════════════════════ */
 #pod-sidebar-player{
-  display:none;   /* JS 控制顯示 */
-  position:absolute; bottom:0; left:0; right:0;
+  display:none; /* JS _podLoad() 控制：選集後才顯示 */
+  flex-shrink:0;
   background:#1a3a1e; border-top:1px solid rgba(255,255,255,.12);
-  padding:10px 14px 12px; z-index:10;
+  padding:10px 14px 12px;
 }
 #pod-sidebar-player .pod-title{
   font-size:.75rem; font-weight:700; color:#e8f5e9;
@@ -624,7 +624,7 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
 /* ── 桌機時隱藏底部浮動，平板/手機時隱藏側欄播放器 ── */
 @media(min-width:1025px){
   #pod-floater{ display:none !important; }
-  #pod-sidebar-player{ display:block; }
+  /* sidebar player 由 JS _podLoad() 控制顯示 */
   #page-podcast{ padding-bottom: 40px; }
 }
 @media(max-width:1024px) and (min-width:641px){
