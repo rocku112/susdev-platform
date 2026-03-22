@@ -639,6 +639,44 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
 }
 
 
+/* ── 側欄播放器：控制列置中，倍速/音量獨立列 ── */
+#pod-sidebar-player .pod-ctrl-row{
+  justify-content:center; gap:10px;
+}
+.pod-sb-row{
+  display:flex; align-items:center; gap:8px;
+  margin-top:7px;
+}
+.pod-row-label{
+  font-size:.65rem; color:#a5d6a7; flex-shrink:0; min-width:22px;
+}
+/* 音量滑桿 */
+.pod-vol-slider{
+  flex:1; height:3px; cursor:pointer;
+  accent-color:#69f0ae;
+  -webkit-appearance:none; appearance:none;
+  background:rgba(255,255,255,.2); border-radius:2px; outline:none;
+}
+.pod-vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:12px; height:12px; border-radius:50%;
+  background:#69f0ae; cursor:pointer;
+}
+/* 平板/手機音量圖示（在深色外的區域用深色） */
+#pod-tab-vol-icon, #pod-mob-vol-icon{ color:var(--gray); }
+#pod-tab-vol.pod-vol-slider, #pod-mob-vol.pod-vol-slider{
+  accent-color:var(--green);
+  background:var(--lgray);
+}
+#pod-tab-vol.pod-vol-slider::-webkit-slider-thumb,
+#pod-mob-vol.pod-vol-slider::-webkit-slider-thumb{
+  background:var(--green);
+}
+/* 倍速選單：側欄版開口朝上 */
+#pod-sidebar-player .pod-speed-menu{
+  bottom:calc(100% + 4px); right:0; left:auto;
+}
+
 </style>
 </head>
 <body>
@@ -666,15 +704,28 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
 
   <!-- ══ 側欄底部播放器（桌機專用，JS 控制顯示） -->
   <div id="pod-sidebar-player">
+    <!-- 標題 -->
     <div class="pod-title" id="pod-sb-title">🎧 未播放</div>
+    <!-- 控制列：播放鍵 + 快進快退（置中） -->
     <div class="pod-ctrl-row">
       <button class="pod-skip-btn" onclick="podSkip(-15)">⏮15s</button>
       <button class="pod-play-btn" id="pod-sb-play" onclick="podToggle()">▶</button>
       <button class="pod-skip-btn" onclick="podSkip(30)">30s⏭</button>
-      <div style="flex:1"></div>
-      <div style="position:relative;">
+    </div>
+    <!-- 進度條 -->
+    <div class="pod-bar-row">
+      <span class="pod-time-txt" id="pod-sb-cur">0:00</span>
+      <div class="pod-bar-outer" onclick="podSeek(event)">
+        <div class="pod-bar-fill" id="pod-sb-fill" style="width:0%"></div>
+      </div>
+      <span class="pod-time-txt" id="pod-sb-dur">0:00</span>
+    </div>
+    <!-- 倍速（獨立一列） -->
+    <div class="pod-sb-row">
+      <span class="pod-row-label">速度</span>
+      <div style="position:relative;flex:1;display:flex;justify-content:flex-end;">
         <button class="pod-speed-pill" id="pod-sb-spd" onclick="podToggleSpeedMenu('sb')">1x</button>
-        <div class="pod-speed-menu" id="pod-sb-menu" style="bottom:calc(100% + 4px);left:0;">
+        <div class="pod-speed-menu" id="pod-sb-menu">
           <button onclick="podSpeed(0.75)">0.75x</button>
           <button onclick="podSpeed(1)" class="cur">1x</button>
           <button onclick="podSpeed(1.25)">1.25x</button>
@@ -683,12 +734,12 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
         </div>
       </div>
     </div>
-    <div class="pod-bar-row">
-      <span class="pod-time-txt" id="pod-sb-cur">0:00</span>
-      <div class="pod-bar-outer" onclick="podSeek(event)">
-        <div class="pod-bar-fill" id="pod-sb-fill" style="width:0%"></div>
-      </div>
-      <span class="pod-time-txt" id="pod-sb-dur">0:00</span>
+    <!-- 音量（獨立一列） -->
+    <div class="pod-sb-row">
+      <span class="pod-row-label" id="pod-sb-vol-icon">🔈</span>
+      <input type="range" id="pod-sb-vol" class="pod-vol-slider"
+             min="0" max="1" step="0.05" value="1"
+             oninput="podVolume(this.value, 'sb')">
     </div>
   </div>
 
@@ -1261,6 +1312,10 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
         <button onclick="podSpeed(2)">2x</button>
       </div>
     </div>
+    <span id="pod-tab-vol-icon" style="font-size:.85rem;flex-shrink:0;">🔈</span>
+    <input type="range" id="pod-tab-vol" class="pod-vol-slider"
+           min="0" max="1" step="0.05" value="1" style="width:70px;flex-shrink:0;"
+           oninput="podVolume(this.value, 'tab')">
   </div>
 
   <!-- 手機版：兩行 -->
@@ -1293,6 +1348,12 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
         <div class="pod-bar-fill" id="pod-mob-fill" style="width:0%"></div>
       </div>
       <span class="pod-time-txt" id="pod-mob-dur">0:00</span>
+    </div>
+    <div class="pod-mobile-row2" style="margin-top:5px;">
+      <span id="pod-mob-vol-icon" style="font-size:.8rem;flex-shrink:0;">🔈</span>
+      <input type="range" id="pod-mob-vol" class="pod-vol-slider"
+             min="0" max="1" step="0.05" value="1" style="flex:1;"
+             oninput="podVolume(this.value, 'mob')">
     </div>
   </div>
 
@@ -3788,32 +3849,32 @@ function closeSidebar(){
 // ════════════════════════════════════════════════
 const PODCAST_DATA = [
   {
-    title: 'EP01',
-    desc: '',
+    title: 'EP01 第一章：永續基本概念',
+    desc: '氣候變遷科學(IPCC)、國際氣候公約(UNFCCC/巴黎協定/COP)、歐盟防漂綠法規(SFDR/CSRD/EU Taxonomy/CBAM)與國內淨零政策',
     url: 'audio/ep01.m4a',
     duration: ''
   },
   {
-    title: 'EP02',
-    desc: '',
+    title: 'EP02 第二章：永續資訊揭露',
+    desc: 'GRI、SASB、TCFD、IFRS S1/S2、TNFD 框架，溫室氣體盤查與第三方確信',
     url: 'audio/ep02.m4a',
     duration: ''
   },
   {
-    title: 'EP03',
-    desc: '',
+    title: 'EP03 第三章：永續風險管理與治理',
+    desc: '環境、社會、治理三大風險底層邏輯；TCFD 框架下的轉型風險與實體風險；情境分析與氣候風險財務曝險衡量',
     url: 'audio/ep03.m4a',
     duration: ''
   },
   {
-    title: 'EP04',
-    desc: '',
+    title: 'EP04 第四章：永續金融',
+    desc: '綠色金融行動方案、SFDR/EU Taxonomy 防漂綠、ESG 指數、永續投資策略、綠色債券/SLB 差異、赤道原則/綠色貸款/SLL、永續保險(PSI)',
     url: 'audio/ep04.m4a',
     duration: ''
   },
   {
-    title: 'EP05',
-    desc: '',
+    title: 'EP05 第一至四章完整精華總複習',
+    desc: '永續基本概念 × 資訊揭露 × 風險管理與治理 × 永續金融 — 全章節濃縮總整理',
     url: 'audio/ep05.m4a',
     duration: ''
   },
@@ -4098,6 +4159,24 @@ function _podSetText(id, txt){
   const el = document.getElementById(id);
   if(el) el.textContent = txt;
 }
+
+function podVolume(val, variant){
+  if(_podAudio) _podAudio.volume = parseFloat(val);
+  // 同步其他裝置的滑桿
+  ['sb','tab','mob'].forEach(v => {
+    if(v === variant) return;
+    const el = document.getElementById('pod-' + v + '-vol');
+    if(el) el.value = val;
+  });
+  // 更新音量圖示
+  const pct = parseFloat(val);
+  const icon = pct === 0 ? '🔇' : pct < 0.4 ? '🔉' : '🔈';
+  ['pod-sb-vol-icon','pod-tab-vol-icon','pod-mob-vol-icon'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = icon;
+  });
+}
+
 
 function _podFmt(sec){
   if(!isFinite(sec)) return '0:00';
