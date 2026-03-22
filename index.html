@@ -3862,30 +3862,40 @@ function _podSaveState(patch){
 //  初始化
 // ════════════════════════════════════════════════
 function initPodcast(){
-  if(!_podInited){
-    _podInited = true;
-    _podAudio  = document.getElementById('pod-audio');
-    _podAudio.addEventListener('timeupdate',     _podOnTime);
-    _podAudio.addEventListener('loadedmetadata', _podOnMeta);
-    _podAudio.addEventListener('ended',          _podOnEnded);
-    _podAudio.addEventListener('play',  () => _podSyncPlay(true));
-    _podAudio.addEventListener('pause', () => _podSyncPlay(false));
+  // 渲染列表：永遠執行，不受初始化狀態影響
+  renderPodcastList();
 
-    // 點其他地方關速度選單
-    document.addEventListener('click', e => {
-      if(!e.target.closest('.pod-speed-menu') && !e.target.closest('.pod-speed-pill')){
-        document.querySelectorAll('.pod-speed-menu.open').forEach(m => m.classList.remove('open'));
-      }
-    });
+  if(_podInited) return;
+  _podInited = true;
 
-    // 恢復上次進度
+  // 音訊元素初始化（包在 try/catch，避免 null 錯誤中斷整個函式）
+  try{
+    _podAudio = document.getElementById('pod-audio');
+    if(_podAudio){
+      _podAudio.addEventListener('timeupdate',     _podOnTime);
+      _podAudio.addEventListener('loadedmetadata', _podOnMeta);
+      _podAudio.addEventListener('ended',          _podOnEnded);
+      _podAudio.addEventListener('play',  () => _podSyncPlay(true));
+      _podAudio.addEventListener('pause', () => _podSyncPlay(false));
+    }
+  } catch(e){ console.warn('[Podcast] audio init error:', e); }
+
+  // 點其他地方關速度選單（null guard 防 crash）
+  document.addEventListener('click', e => {
+    if(!e || !e.target || !e.target.closest) return;
+    if(!e.target.closest('.pod-speed-menu') && !e.target.closest('.pod-speed-pill')){
+      document.querySelectorAll('.pod-speed-menu.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+
+  // 恢復上次進度
+  try{
     const st = _podLoadState();
-    if(st.idx >= 0 && st.idx < PODCAST_DATA.length){
+    if(st.idx >= 0 && st.idx < PODCAST_DATA.length && _podAudio){
       _podLoad(st.idx, false);
       if(st.time > 0) _podAudio.currentTime = st.time;
     }
-  }
-  renderPodcastList();
+  } catch(e){ console.warn('[Podcast] restore state error:', e); }
 }
 
 // ════════════════════════════════════════════════
@@ -4723,6 +4733,7 @@ function showTbResult(){
 })();
 
 renderHome();
+renderPodcastList(); // 預先填入 Podcast 列表
 
 </script>
 </body>
