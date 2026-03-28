@@ -15,13 +15,13 @@
   --red:#b71c1c;--rp:#ffebee;
   --purple:#6a1b9a;--pp:#f3e5f5;
   --teal:#00695c;--tp:#e0f2f1;
-  --gray:#546e7a;--lgray:#eceff1;--border:#cfd8dc;
+  --gray:#7a6e65;--lgray:#f0ece4;--border:#e5ddd2;
   /* Semantic aliases – use these in JS/HTML for clarity */
   --color-success:var(--green);
   --color-danger:var(--red);
   --color-info:var(--blue);
   --color-warn:var(--orange);
-  --bg:#f0f4f8;--card:#fff;--sidebar:#1b2a1d;--sidebar-w:240px;
+  --bg:#faf8f4;--card:#fefcf9;--sidebar:#faf7f2;--sidebar-w:240px;
   --header-h:56px;--bottom-nav-h:60px;
   --shadow:0 2px 12px rgba(0,0,0,.1);--shadow-lg:0 4px 24px rgba(0,0,0,.15);
   --radius:12px;--radius-sm:8px;
@@ -39,27 +39,27 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
 /* Sidebar */
 #sidebar{
   width:var(--sidebar-w);min-width:var(--sidebar-w);
-  background:var(--sidebar);color:#fff;
+  background:var(--sidebar);color:#2a221a;border-right:1px solid #ede8e0;
   position:fixed;top:0;left:0;bottom:0;z-index:200;
   display:flex;flex-direction:column;
   transition:transform var(--transition);overflow-y:auto;
 }
-#sidebar-header{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.1);}
-#sidebar-header h2{font-size:1rem;line-height:1.4;opacity:.95;}
-#sidebar-header p{font-size:.72rem;opacity:.6;margin-top:3px;}
+#sidebar-header{padding:20px 18px 14px;border-bottom:1px solid #ede8e0;}
+
+
 #sidebar nav{flex:1;padding:10px 0;}
 .nav-item{
   display:flex;align-items:center;gap:12px;
   padding:13px 18px;cursor:pointer;
   font-size:.88rem;font-weight:500;
+  color:#2a221a;
   white-space:nowrap;overflow:hidden;transition:background var(--transition),color var(--transition);
   border-left:3px solid transparent;
-  color:rgba(255,255,255,.75);
 }
-.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
-.nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--gll);font-weight:700;}
+.nav-item:hover{background:rgba(0,0,0,.06);color:#2a221a;}
+.nav-item.active{background:#eef6ec;color:#3a7d44;border-left-color:#5a9e6a;font-weight:700;}
 .nav-item .icon{font-size:1.1rem;width:22px;text-align:center;}
-#sidebar-footer{padding:12px 18px;border-top:1px solid rgba(255,255,255,.1);font-size:.72rem;opacity:.5;}
+#sidebar-footer{padding:12px 18px;border-top:1px solid #ede8e0;font-size:.72rem;color:#b0a898;}
 
 /* Main area */
 #main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
@@ -167,7 +167,7 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
    HOME PAGE
 ═══════════════════════════════════════════ */
 .welcome-banner{
-  background:linear-gradient(135deg,var(--green) 0%,#2e7d32 60%,#388e3c);
+  background:linear-gradient(135deg,#2d5a1b,#4a8a2a);
   color:#fff;border-radius:16px;padding:28px 28px;margin-bottom:20px;
 }
 .welcome-banner h2{font-size:1.4rem;margin-bottom:6px;}
@@ -2134,7 +2134,7 @@ ul.s-list > li::before{
 .nav-section-label {
   font-size: .68rem;
   font-weight: 700;
-  color: var(--gray);
+  color: #b8afa4;
   text-transform: uppercase;
   letter-spacing: .08em;
   padding: 4px 16px 2px;
@@ -2235,8 +2235,14 @@ ul.s-list > li::before{
 <!-- ── SIDEBAR ─────────────────────────────── -->
 <aside id="sidebar">
   <div id="sidebar-header">
-    <h2>🌱 永續發展<br>學習平台</h2>
-    <p>基礎能力測驗備考系統</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.15);
+        display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">🌱</div>
+      <div>
+        <div style="font-size:.92rem;font-weight:700;line-height:1.25;opacity:.95;">永續發展學習平台</div>
+        <div style="font-size:.68rem;opacity:.55;margin-top:2px;letter-spacing:.03em;">基礎能力測驗備考系統</div>
+      </div>
+    </div>
   </div>
   <nav id="sidebar-nav">
     <div class="nav-item active" data-page="home"><span class="icon">🏠</span>首頁</div>
@@ -2258,7 +2264,7 @@ ul.s-list > li::before{
   
   <!-- 登入狀態 -->
   <div id="auth-panel" style="margin:12px;padding:10px 12px;border-radius:10px;
-    background:var(--card);border:1px solid var(--border);">
+    background:#f3ede4;border:1px solid #e5ddd2;">
     <div id="auth-logged-out" style="text-align:center;">
       <div style="font-size:.75rem;color:var(--gray);margin-bottom:8px;">登入以跨裝置同步進度</div>
       <button onclick="fbSignIn()" style="width:100%;padding:7px;border-radius:8px;
@@ -2289,7 +2295,7 @@ ul.s-list > li::before{
 
   </nav>
   <div id="sidebar-reading-ctx" style="display:none;padding:6px 18px 0;font-size:.72rem;color:var(--gll);line-height:1.4;border-top:1px solid rgba(255,255,255,.1);margin:0 0 4px;"></div>
-  <div id="sidebar-footer">113–115 年考古題 1040 題</div>
+  <div id="sidebar-footer"></div>
 
   <!-- ══ 側欄底部播放器（桌機專用，JS 控制顯示） -->
   <div id="pod-sidebar-player">
@@ -2354,8 +2360,8 @@ ul.s-list > li::before{
     <!-- ══ HOME PAGE ══════════════════════════ -->
     <div id="page-home" class="page active">
       <div class="welcome-banner">
-        <h2>👋 歡迎使用永續發展學習平台</h2>
-        <p>收錄 113–115 年實際考試題目 1040 題 · 完整課程筆記 · 模擬考試模式 · 學習進度追蹤</p>
+        <h2>🌱 從今天起，為永續加分</h2>
+        <p>掌握考試核心，一次通過</p>
       </div>
       <div class="stats-grid" id="home-stats"></div>
       <div id="home-guide"></div>
@@ -2384,7 +2390,7 @@ ul.s-list > li::before{
           <div class="q-icon">🎯</div>
           <div>
             <h3>題庫練習</h3>
-            <p>1040 題真實考古題，即時顯示答案，可依考試年次篩選</p>
+            <p>即時顯示答案，可依考試年次篩選</p>
           </div>
         </div>
 
@@ -7435,7 +7441,7 @@ function renderHome(){
       phase: '第三階段', sub: '實戰練習', color: '#1b5e20', bg: '#e8f5e9', border: '#2e7d32',
       icon: '🎯',
       steps: [
-        { pg: PAGES.QUIZ,     icon: '🎯', label: '題庫練習',   desc: '1040題真實考古題，即時解析' },
+        { pg: PAGES.QUIZ,     icon: '🎯', label: '題庫練習',   desc: '即時顯示答案，可依年次篩選' },
         { pg: PAGES.EXAM,     icon: '📝', label: '模擬考試',   desc: '90分鐘限時，80題模擬正式考試' },
       ]
     },
