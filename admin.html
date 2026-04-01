@@ -152,7 +152,7 @@
       <div id="loading"><div class="spinner"></div><span>讀取使用者資料中…</span></div>
       <table id="users-table" style="display:none">
         <thead><tr>
-          <th>UID</th><th>考試次數</th><th>最近考試</th><th>最高分</th><th>平均答對率</th><th>通過</th>
+          <th>名稱</th><th>Email</th><th>考試次數</th><th>最近考試</th><th>最高分</th><th>平均答對率</th><th>通過</th>
         </tr></thead>
         <tbody id="users-tbody"></tbody>
       </table>
@@ -182,7 +182,7 @@ import { getDatabase, ref, get }
       appId: "1:640671358038:web:d71c2ec7f4c28b02396ff7"
     };
 
-const ADMIN_EMAILS = ["evil1203@gmail.com"];
+const ADMIN_EMAILS = ["pht0503@gmail.com"];
 
 const CH_LABELS = {ch1:'第一章',ch2:'第二章',ch3:'第三章',ch4:'第四章'};
 const CH_COLORS = {ch1:'#58a6ff',ch2:'#3fb950',ch3:'#d29922',ch4:'#bc8cff'};
@@ -231,8 +231,10 @@ async function loadData() {
       let p={};
       try { p = typeof data.progress==='string' ? JSON.parse(data.progress) : (data.progress||{}); } catch{}
       const history = p.history||[], chStats = p.chStats||{}, secStats = p.secStats||{};
+      const email       = data.profile?.email       || '';
+      const displayName = data.profile?.displayName || '';
       const scores  = history.map(h=>h.pct||0);
-      return { uid, history, chStats, secStats,
+      return { uid, email, displayName, history, chStats, secStats,
         examCount : history.length,
         lastDate  : history.length ? history[history.length-1].date : '—',
         maxScore  : scores.length ? Math.max(...scores) : 0,
@@ -265,7 +267,11 @@ function renderTable(users) {
   users.forEach((u,idx)=>{
     const tr = document.createElement('tr');
     tr.innerHTML=`
-      <td class="uid-cell" title="${u.uid}">${u.uid}</td>
+      <td>
+        <div style="font-size:13px;font-weight:500">${u.displayName || '<span style="color:var(--subtle)">—</span>'}</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px" title="${u.uid}">${u.uid.slice(0,12)}…</div>
+      </td>
+      <td style="font-size:12px;color:var(--muted)">${u.email || '<span style="color:var(--subtle)">未知</span>'}</td>
       <td><span class="badge badge-gray">${u.examCount} 次</span></td>
       <td style="color:var(--muted);font-size:12px">${u.lastDate}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${u.maxScore>=70?'var(--green)':'var(--orange)'}">${u.maxScore.toFixed(1)}%</td>

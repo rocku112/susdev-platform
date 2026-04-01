@@ -2601,6 +2601,11 @@ ul.s-list > li::before{
       window._fbUser = user;
       _updateAuthUI(user);
       if(user) {
+        // 寫入 profile（供管理後台顯示）
+        set(ref(db, 'users/' + user.uid + '/profile'), {
+          email:       user.email       || '',
+          displayName: user.displayName || ''
+        }).catch(()=>{});
         await _syncFromFirebase(user.uid);
         if(typeof renderProgress === 'function' && document.getElementById('page-progress')?.classList.contains('active')) {
           renderProgress();
