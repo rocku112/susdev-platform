@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESG 平台管理後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117; --surface:#161b22; --border:#21262d; --border2:#30363d;
+    --green:#3fb950; --green-dim:#1a4a24; --blue:#58a6ff;
+    --orange:#d29922; --red:#f85149; --text:#e6edf3; --muted:#8b949e; --subtle:#484f58;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;min-height:100vh}
+
+  /* LOGIN */
+  #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .login-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:48px 56px;text-align:center;max-width:400px;width:100%}
+  .login-card h1{font-size:22px;font-weight:700;margin-bottom:6px}
+  .login-card>p{color:var(--muted);font-size:13px;margin-bottom:32px}
+  #btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s}
+  #btn-google:hover{background:var(--border);border-color:var(--green)}
+  #btn-google svg{width:18px;height:18px;flex-shrink:0}
+  #login-error{color:var(--red);font-size:12px;display:none;margin-top:14px}
+
+  /* DASHBOARD */
+  #dashboard{display:none;flex-direction:column;min-height:100vh}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .header-left{display:flex;align-items:center;gap:12px}
+  .header-logo{background:var(--green-dim);border:1px solid var(--green);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;font-family:'JetBrains Mono',monospace}
+  header h1{font-size:15px;font-weight:600}
+  header h1 span{color:var(--muted);font-weight:400}
+  .header-right{display:flex;align-items:center;gap:16px}
+  #admin-email{font-size:12px;color:var(--muted)}
+  #btn-logout{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer;transition:color .15s,border-color .15s}
+  #btn-logout:hover{color:var(--text);border-color:var(--subtle)}
+  main{padding:28px;max-width:1200px;width:100%;margin:0 auto}
+
+  /* STAT CARDS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;position:relative;overflow:hidden}
+  .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0}
+  .c-green::before{background:var(--green)} .c-blue::before{background:var(--blue)}
+  .c-orange::before{background:var(--orange)} .c-red::before{background:var(--red)}
+  .stat-label{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+  .stat-value{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;line-height:1;margin-bottom:6px}
+  .c-green .stat-value{color:var(--green)} .c-blue .stat-value{color:var(--blue)}
+  .c-orange .stat-value{color:var(--orange)} .c-red .stat-value{color:var(--red)}
+  .stat-sub{font-size:12px;color:var(--subtle)}
+
+  /* SECTION HEADER */
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+  #btn-refresh{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+  #btn-refresh:hover{color:var(--green);border-color:var(--green)}
+  #btn-refresh svg{width:13px;height:13px}
+
+  /* TABLE */
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:28px}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:var(--bg);padding:10px 16px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);font-weight:500}
+  tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(48,54,61,.4)}
+  tbody tr.expanded{background:rgba(63,185,80,.05)}
+  tbody td{padding:12px 16px}
+  .uid-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+  .badge-green{background:var(--green-dim);color:var(--green);border:1px solid var(--green)}
+  .badge-gray{background:rgba(139,148,158,.1);color:var(--muted);border:1px solid var(--border2)}
+  .pass-bar-bg{background:var(--border);border-radius:4px;height:6px;overflow:hidden;width:80px}
+  .pass-bar-fill{height:100%;border-radius:4px;background:var(--green)}
+
+  /* EXPAND */
+  .expand-row{display:none}
+  .expand-row.open{display:table-row}
+  .expand-cell{padding:0!important;border-bottom:1px solid var(--border)!important}
+  .expand-inner{padding:24px 28px;background:rgba(13,17,23,.6);display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .panel-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+  .ch-bar-list{display:flex;flex-direction:column;gap:10px}
+  .ch-bar-item{display:flex;align-items:center;gap:10px}
+  .ch-bar-label{width:130px;font-size:12px;color:var(--muted);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ch-bar-track{flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden}
+  .ch-bar-fill{height:100%;border-radius:4px}
+  .ch-bar-pct{width:38px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px}
+  .history-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
+  .history-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .history-date{font-size:11px;color:var(--muted)} .history-type{font-size:12px}
+  .history-score{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+  .history-total{font-size:11px;color:var(--subtle)}
+
+  /* LOADING */
+  #loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--muted);gap:14px}
+  .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .empty-state{text-align:center;padding:48px;color:var(--muted);font-size:13px}
+
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+  @media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}.expand-inner{grid-template-columns:1fr}main{padding:16px}}
+  @media(max-width:600px){.stats-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <h1>🌿 ESG 平台管理後台</h1>
+    <p>請以管理員 Google 帳號登入</p>
+    <button id="btn-google">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      以 Google 帳號登入
+    </button>
+    <p id="login-error">⛔ 此帳號無管理員權限</p>
+  </div>
+</div>
+
+<div id="dashboard">
+  <header>
+    <div class="header-left">
+      <span class="header-logo">ADMIN</span>
+      <h1>ESG 永續學習平台 <span>/ 管理後台</span></h1>
+    </div>
+    <div class="header-right">
+      <span id="admin-email"></span>
+      <button id="btn-logout">登出</button>
+    </div>
+  </header>
+  <main>
+    <div class="stats-grid">
+      <div class="stat-card c-green"><div class="stat-label">總使用者數</div><div class="stat-value" id="s-users">—</div><div class="stat-sub">已登入並同步資料</div></div>
+      <div class="stat-card c-blue"><div class="stat-label">總考試次數</div><div class="stat-value" id="s-exams">—</div><div class="stat-sub">所有考試模式合計</div></div>
+      <div class="stat-card c-orange"><div class="stat-label">平均答對率</div><div class="stat-value" id="s-avg">—</div><div class="stat-sub">全體使用者平均</div></div>
+      <div class="stat-card c-red"><div class="stat-label">通過率</div><div class="stat-value" id="s-pass">—</div><div class="stat-sub">答對率 ≥ 70% 計通過</div></div>
+    </div>
+    <div class="section-header">
+      <span class="section-title">使用者列表</span>
+      <button id="btn-refresh">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+        重新整理
+      </button>
+    </div>
+    <div class="table-wrap">
+      <div id="loading"><div class="spinner"></div><span>讀取使用者資料中…</span></div>
+      <table id="users-table" style="display:none">
+        <thead><tr>
+          <th>UID</th><th>考試次數</th><th>最近考試</th><th>最高分</th><th>平均答對率</th><th>通過</th>
+        </tr></thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ════════════════════════════════════
+     ⚠️  把 firebaseConfig 換成你的設定
+     來源：index.html 裡的 firebaseConfig
+     ════════════════════════════════════ -->
+<script type="module">
+import { initializeApp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getDatabase, ref, get }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzY_dPwuap8_SCDhAvEJ2d_H_pETKp_M8",
+      authDomain: "esg-learning-and-practice.firebaseapp.com",
+      databaseURL: "https://esg-learning-and-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "esg-learning-and-practice",
+      storageBucket: "esg-learning-and-practice.firebasestorage.app",
+      messagingSenderId: "640671358038",
+      appId: "1:640671358038:web:d71c2ec7f4c28b02396ff7"
+    };
+
+const ADMIN_EMAILS = ["pht0503@gmail.com"];
+
+const CH_LABELS = {ch1:'第一章',ch2:'第二章',ch3:'第三章',ch4:'第四章'};
+const CH_COLORS = {ch1:'#58a6ff',ch2:'#3fb950',ch3:'#d29922',ch4:'#bc8cff'};
+const BAR_COLORS = ['#3fb950','#d29922','#f85149','#58a6ff','#bc8cff','#79c0ff'];
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+const $login     = document.getElementById('login-screen');
+const $dashboard = document.getElementById('dashboard');
+const $error     = document.getElementById('login-error');
+
+onAuthStateChanged(auth, user => {
+  if (user && ADMIN_EMAILS.includes(user.email)) {
+    $login.style.display     = 'none';
+    $dashboard.style.display = 'flex';
+    document.getElementById('admin-email').textContent = user.email;
+    loadData();
+  } else if (user) {
+    fbSignOut(auth);
+    $error.style.display = 'block';
+  } else {
+    $login.style.display     = 'flex';
+    $dashboard.style.display = 'none';
+  }
+});
+
+document.getElementById('btn-google').addEventListener('click', () =>
+  signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error));
+document.getElementById('btn-logout').addEventListener('click', () => fbSignOut(auth));
+document.getElementById('btn-refresh').addEventListener('click', loadData);
+
+async function loadData() {
+  const $ld = document.getElementById('loading');
+  const $tb = document.getElementById('users-table');
+  $ld.innerHTML = '<div class="spinner"></div><span>讀取使用者資料中…</span>';
+  $ld.style.display = 'flex';
+  $tb.style.display = 'none';
+  try {
+    const snap = await get(ref(db,'users'));
+    const raw  = snap.val();
+    if (!raw) { $ld.innerHTML='<div class="empty-state">尚無使用者資料</div>'; return; }
+
+    const users = Object.entries(raw).map(([uid,data]) => {
+      let p={};
+      try { p = typeof data.progress==='string' ? JSON.parse(data.progress) : (data.progress||{}); } catch{}
+      const history = p.history||[], chStats = p.chStats||{}, secStats = p.secStats||{};
+      const scores  = history.map(h=>h.pct||0);
+      return { uid, history, chStats, secStats,
+        examCount : history.length,
+        lastDate  : history.length ? history[history.length-1].date : '—',
+        maxScore  : scores.length ? Math.max(...scores) : 0,
+        avgScore  : scores.length ? scores.reduce((a,b)=>a+b,0)/scores.length : 0,
+        passCount : history.filter(h=>(h.pct||0)>=70).length };
+    });
+
+    renderStats(users);
+    renderTable(users);
+    $ld.style.display = 'none';
+    $tb.style.display = 'table';
+  } catch(err) {
+    $ld.innerHTML = `<div class="empty-state">讀取失敗：${err.message}</div>`;
+  }
+}
+
+function renderStats(users) {
+  const all = users.flatMap(u=>u.history.map(h=>h.pct||0));
+  const avg  = all.length ? all.reduce((a,b)=>a+b,0)/all.length : 0;
+  const pass = all.length ? all.filter(s=>s>=70).length/all.length*100 : 0;
+  document.getElementById('s-users').textContent = users.length;
+  document.getElementById('s-exams').textContent = users.reduce((s,u)=>s+u.examCount,0);
+  document.getElementById('s-avg').textContent   = avg.toFixed(1)+'%';
+  document.getElementById('s-pass').textContent  = pass.toFixed(1)+'%';
+}
+
+function renderTable(users) {
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML='';
+  users.forEach((u,idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML=`
+      <td class="uid-cell" title="${u.uid}">${u.uid}</td>
+      <td><span class="badge badge-gray">${u.examCount} 次</span></td>
+      <td style="color:var(--muted);font-size:12px">${u.lastDate}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${u.maxScore>=70?'var(--green)':'var(--orange)'}">${u.maxScore.toFixed(1)}%</td>
+      <td>
+        <div class="pass-bar-bg"><div class="pass-bar-fill" style="width:${Math.min(u.avgScore,100).toFixed(1)}%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace">${u.avgScore.toFixed(1)}%</div>
+      </td>
+      <td>${u.passCount>0?`<span class="badge badge-green">✓ ${u.passCount} 次</span>`:`<span class="badge badge-gray">未通過</span>`}</td>`;
+    tr.addEventListener('click',()=>toggleExpand(idx));
+
+    const exp=document.createElement('tr');
+    exp.className='expand-row'; exp.id=`expand-${idx}`;
+    exp.innerHTML=`<td colspan="6" class="expand-cell"><div class="expand-inner">${renderChStats(u)}${renderHistory(u)}</div></td>`;
+    tbody.appendChild(tr); tbody.appendChild(exp);
+  });
+}
+
+function toggleExpand(idx) {
+  const row=document.getElementById(`expand-${idx}`);
+  const was=row.classList.contains('open');
+  document.querySelectorAll('.expand-row.open').forEach(r=>r.classList.remove('open'));
+  document.querySelectorAll('tbody tr.expanded').forEach(r=>r.classList.remove('expanded'));
+  if(!was){row.classList.add('open');row.previousElementSibling.classList.add('expanded');}
+}
+
+function renderChStats(u) {
+  const chHtml = Object.entries(u.chStats).map(([ch,s])=>{
+    const pct=s.total?(s.correct/s.total*100):0, c=CH_COLORS[ch]||'#8b949e';
+    return `<div class="ch-bar-item"><div class="ch-bar-label">${CH_LABELS[ch]||ch}</div><div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div><div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div></div>`;
+  }).join('');
+  const secHtml = Object.entries(u.secStats).map(([name,s],i)=>{
+    const pct=s.total?(s.correct/s.total*100):0, c=BAR_COLORS[i%BAR_COLORS.length];
+    return `<div class="ch-bar-item"><div class="ch-bar-label" title="${name}">${name}</div><div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div><div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div></div>`;
+  }).join('');
+  return `<div><div class="panel-title">章節表現</div><div class="ch-bar-list">${chHtml||'<span style="color:var(--subtle);font-size:12px">無資料</span>'}</div><div class="panel-title" style="margin-top:18px">各節表現</div><div class="ch-bar-list">${secHtml||'<span style="color:var(--subtle);font-size:12px">無資料</span>'}</div></div>`;
+}
+
+function renderHistory(u) {
+  if(!u.history.length) return `<div><div class="panel-title">考試紀錄</div><div class="empty-state" style="padding:24px">尚無考試紀錄</div></div>`;
+  const items=[...u.history].reverse().map(h=>{
+    const pct=(h.pct||0).toFixed(1), color=h.passed?'var(--green)':((h.pct||0)>=50?'var(--orange)':'var(--red)');
+    return `<div class="history-item"><div><div class="history-date">${h.date}</div><div class="history-type">${h.type||'考試'}</div></div><div style="text-align:center"><div class="history-score" style="color:${color}">${pct}%</div><div class="history-total">${h.correct}/${h.total}</div></div>${h.passed?`<span class="badge badge-green" style="font-size:10px">通過</span>`:`<span class="badge badge-gray" style="font-size:10px">未通過</span>`}</div>`;
+  }).join('');
+  return `<div><div class="panel-title">考試紀錄（最新在上）</div><div class="history-list">${items}</div></div>`;
+}
+</script>
+</body>
+</html>
