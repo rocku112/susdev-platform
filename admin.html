@@ -4,111 +4,211 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ESG 平台管理後台</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0d1117; --surface:#161b22; --border:#21262d; --border2:#30363d;
-    --green:#3fb950; --green-dim:#1a4a24; --blue:#58a6ff;
-    --orange:#d29922; --red:#f85149; --text:#e6edf3; --muted:#8b949e; --subtle:#484f58;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;min-height:100vh}
+:root{
+  --green:#1b5c42;--gl:#3fa068;--gp:#e2f5ec;--gll:#72c49a;
+  --blue:#89b4d4;--bp:#e8f2f9;
+  --orange:#c87848;--op:#fdf0e0;
+  --red:#b71c1c;--rp:#ffebee;
+  --gray:#7a6e65;--lgray:#f0ece4;--border:#e5ddd2;
+  --bg:#faf8f4;--card:#fefcf9;--sidebar:#faf7f2;
+  --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 4px 24px rgba(0,0,0,.13);
+  --radius:12px;--radius-sm:8px;
+  --font:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;
+  --transition:.2s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:#263238;min-height:100vh;}
 
-  /* LOGIN */
-  #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh}
-  .login-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:48px 56px;text-align:center;max-width:400px;width:100%}
-  .login-card h1{font-size:22px;font-weight:700;margin-bottom:6px}
-  .login-card>p{color:var(--muted);font-size:13px;margin-bottom:32px}
-  #btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s}
-  #btn-google:hover{background:var(--border);border-color:var(--green)}
-  #btn-google svg{width:18px;height:18px;flex-shrink:0}
-  #login-error{color:var(--red);font-size:12px;display:none;margin-top:14px}
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);}
+.login-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:52px 60px;text-align:center;max-width:420px;width:100%;
+  box-shadow:var(--shadow-lg);
+}
+.login-logo{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(145deg,#2d5a1b,#4a8a2a);
+  font-size:28px;margin-bottom:20px;
+  box-shadow:0 4px 16px rgba(27,92,66,.3);
+}
+.login-card h1{font-size:20px;font-weight:800;color:#1a2e1a;margin-bottom:6px;}
+.login-card>p{color:var(--gray);font-size:13px;margin-bottom:32px;}
+#btn-google{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:13px 20px;
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  color:#263238;font-family:var(--font);font-size:14px;font-weight:600;
+  cursor:pointer;transition:all var(--transition);
+  box-shadow:var(--shadow);
+}
+#btn-google:hover{border-color:var(--gl);box-shadow:0 2px 16px rgba(63,160,104,.2);transform:translateY(-1px);}
+#btn-google svg{width:18px;height:18px;flex-shrink:0;}
+#login-error{
+  display:none;margin-top:14px;padding:10px 16px;
+  background:var(--rp);border:1px solid #f5c6cb;border-radius:var(--radius-sm);
+  color:var(--red);font-size:13px;
+}
 
-  /* DASHBOARD */
-  #dashboard{display:none;flex-direction:column;min-height:100vh}
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-  .header-left{display:flex;align-items:center;gap:12px}
-  .header-logo{background:var(--green-dim);border:1px solid var(--green);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;font-family:'JetBrains Mono',monospace}
-  header h1{font-size:15px;font-weight:600}
-  header h1 span{color:var(--muted);font-weight:400}
-  .header-right{display:flex;align-items:center;gap:16px}
-  #admin-email{font-size:12px;color:var(--muted)}
-  #btn-logout{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer;transition:color .15s,border-color .15s}
-  #btn-logout:hover{color:var(--text);border-color:var(--subtle)}
-  main{padding:28px;max-width:1200px;width:100%;margin:0 auto}
+/* ── DASHBOARD ── */
+#dashboard{display:none;flex-direction:column;min-height:100vh;}
 
-  /* STAT CARDS */
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;position:relative;overflow:hidden}
-  .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0}
-  .c-green::before{background:var(--green)} .c-blue::before{background:var(--blue)}
-  .c-orange::before{background:var(--orange)} .c-red::before{background:var(--red)}
-  .stat-label{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-  .stat-value{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;line-height:1;margin-bottom:6px}
-  .c-green .stat-value{color:var(--green)} .c-blue .stat-value{color:var(--blue)}
-  .c-orange .stat-value{color:var(--orange)} .c-red .stat-value{color:var(--red)}
-  .stat-sub{font-size:12px;color:var(--subtle)}
+/* header */
+#topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 28px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;box-shadow:var(--shadow);
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.admin-badge{
+  background:linear-gradient(135deg,#2d5a1b,#4a8a2a);
+  color:#fff;font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:20px;letter-spacing:.05em;
+}
+#topbar h1{font-size:15px;font-weight:700;color:var(--green);}
+#topbar h1 span{color:var(--gray);font-weight:400;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+#admin-email{font-size:12px;color:var(--gray);}
+#btn-logout{
+  background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--gray);padding:5px 14px;font-family:var(--font);font-size:12px;
+  cursor:pointer;transition:all var(--transition);font-weight:600;
+}
+#btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--rp);}
 
-  /* SECTION HEADER */
-  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-  .section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-  #btn-refresh{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
-  #btn-refresh:hover{color:var(--green);border-color:var(--green)}
-  #btn-refresh svg{width:13px;height:13px}
+main{padding:28px;max-width:1160px;width:100%;margin:0 auto;}
 
-  /* TABLE */
-  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:28px}
-  table{width:100%;border-collapse:collapse}
-  thead th{background:var(--bg);padding:10px 16px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);font-weight:500}
-  tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
-  tbody tr:last-child{border-bottom:none}
-  tbody tr:hover{background:rgba(48,54,61,.4)}
-  tbody tr.expanded{background:rgba(63,185,80,.05)}
-  tbody td{padding:12px 16px}
-  .uid-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
-  .badge-green{background:var(--green-dim);color:var(--green);border:1px solid var(--green)}
-  .badge-gray{background:rgba(139,148,158,.1);color:var(--muted);border:1px solid var(--border2)}
-  .pass-bar-bg{background:var(--border);border-radius:4px;height:6px;overflow:hidden;width:80px}
-  .pass-bar-fill{height:100%;border-radius:4px;background:var(--green)}
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 22px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:6px;
+  transition:transform var(--transition),box-shadow var(--transition);
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.stat-icon{font-size:24px;margin-bottom:4px;}
+.stat-label{font-size:11px;color:var(--gray);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.stat-value{font-size:30px;font-weight:800;line-height:1;}
+.stat-value.v-green  {color:var(--green);}
+.stat-value.v-blue   {color:#4a90d9;}
+.stat-value.v-orange {color:var(--orange);}
+.stat-value.v-teal   {color:#4a9480;}
+.stat-sub{font-size:12px;color:#aaa;}
 
-  /* EXPAND */
-  .expand-row{display:none}
-  .expand-row.open{display:table-row}
-  .expand-cell{padding:0!important;border-bottom:1px solid var(--border)!important}
-  .expand-inner{padding:24px 28px;background:rgba(13,17,23,.6);display:grid;grid-template-columns:1fr 1fr;gap:24px}
-  .panel-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
-  .ch-bar-list{display:flex;flex-direction:column;gap:10px}
-  .ch-bar-item{display:flex;align-items:center;gap:10px}
-  .ch-bar-label{width:130px;font-size:12px;color:var(--muted);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ch-bar-track{flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden}
-  .ch-bar-fill{height:100%;border-radius:4px}
-  .ch-bar-pct{width:38px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px}
-  .history-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
-  .history-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .history-date{font-size:11px;color:var(--muted)} .history-type{font-size:12px}
-  .history-score{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
-  .history-total{font-size:11px;color:var(--subtle)}
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.section-title{font-size:14px;font-weight:700;color:var(--green);}
+#btn-refresh{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--gray);padding:6px 14px;font-family:var(--font);font-size:12px;
+  cursor:pointer;transition:all var(--transition);font-weight:600;
+}
+#btn-refresh:hover{border-color:var(--gl);color:var(--green);background:var(--gp);}
+#btn-refresh svg{width:13px;height:13px;}
 
-  /* LOADING */
-  #loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--muted);gap:14px}
-  .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .empty-state{text-align:center;padding:48px;color:var(--muted);font-size:13px}
+/* ── TABLE ── */
+.table-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow);margin-bottom:28px;
+}
+table{width:100%;border-collapse:collapse;}
+thead th{
+  background:var(--lgray);padding:11px 16px;text-align:left;
+  font-size:11px;color:var(--gray);text-transform:uppercase;
+  letter-spacing:.05em;border-bottom:1px solid var(--border);font-weight:700;
+}
+tbody tr{border-bottom:1px solid #f0ece4;cursor:pointer;transition:background var(--transition);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#f4f9f4;}
+tbody tr.expanded{background:var(--gp);}
+tbody td{padding:13px 16px;font-size:13px;}
 
-  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.user-name{font-weight:600;color:#263238;font-size:13px;}
+.user-uid{font-size:11px;color:#aaa;margin-top:2px;font-family:monospace;}
+.user-email{font-size:12px;color:var(--gray);}
 
-  @media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}.expand-inner{grid-template-columns:1fr}main{padding:16px}}
-  @media(max-width:600px){.stats-grid{grid-template-columns:1fr}}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-green{background:var(--gp);color:var(--green);border:1px solid var(--gll);}
+.badge-gray {background:var(--lgray);color:var(--gray);border:1px solid var(--border);}
+.badge-orange{background:var(--op);color:var(--orange);border:1px solid #e8c49a;}
+
+.score-bar-wrap{display:flex;flex-direction:column;gap:3px;}
+.score-bar-bg{background:var(--lgray);border-radius:4px;height:6px;overflow:hidden;width:90px;}
+.score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gl),var(--green));transition:width .4s ease;}
+.score-text{font-size:11px;color:var(--gray);font-weight:600;}
+
+/* ── EXPAND PANEL ── */
+.expand-row{display:none;}
+.expand-row.open{display:table-row;}
+.expand-cell{padding:0!important;border-bottom:1px solid var(--border)!important;}
+.expand-inner{
+  padding:22px 24px;background:#f7fbf8;
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  border-top:2px solid var(--gp);
+}
+.panel-title{
+  font-size:12px;font-weight:700;color:var(--green);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.panel-title::before{content:'';display:block;width:3px;height:14px;background:var(--gl);border-radius:2px;}
+
+.ch-bar-list{display:flex;flex-direction:column;gap:9px;}
+.ch-bar-item{display:flex;align-items:center;gap:10px;}
+.ch-bar-label{width:128px;font-size:12px;color:var(--gray);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ch-bar-track{flex:1;background:var(--lgray);border-radius:4px;height:8px;overflow:hidden;}
+.ch-bar-fill{height:100%;border-radius:4px;}
+.ch-bar-pct{width:36px;text-align:right;font-size:12px;font-weight:700;}
+
+.history-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto;padding-right:4px;}
+.history-item{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transition:box-shadow var(--transition);
+}
+.history-item:hover{box-shadow:var(--shadow);}
+.history-date{font-size:11px;color:var(--gray);}
+.history-type{font-size:12px;font-weight:600;color:#263238;margin-top:2px;}
+.history-score{font-size:14px;font-weight:800;}
+.history-total{font-size:11px;color:var(--gray);}
+
+/* ── LOADING ── */
+#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--gray);gap:14px;}
+.spinner{
+  width:32px;height:32px;
+  border:3px solid var(--lgray);border-top-color:var(--gl);
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:48px;color:var(--gray);font-size:13px;}
+
+/* ── SCROLL ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#ccc;}
+
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .expand-inner{grid-template-columns:1fr;}
+  main{padding:16px;}
+}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
+<!-- ── LOGIN ── -->
 <div id="login-screen">
   <div class="login-card">
-    <h1>🌿 ESG 平台管理後台</h1>
+    <div class="login-logo">🌿</div>
+    <h1>ESG 平台管理後台</h1>
     <p>請以管理員 Google 帳號登入</p>
     <button id="btn-google">
       <svg viewBox="0 0 24 24" fill="none">
@@ -119,28 +219,53 @@
       </svg>
       以 Google 帳號登入
     </button>
-    <p id="login-error">⛔ 此帳號無管理員權限</p>
+    <div id="login-error">⛔ 此帳號無管理員權限</div>
   </div>
 </div>
 
+<!-- ── DASHBOARD ── -->
 <div id="dashboard">
-  <header>
-    <div class="header-left">
-      <span class="header-logo">ADMIN</span>
-      <h1>ESG 永續學習平台 <span>/ 管理後台</span></h1>
+  <div id="topbar">
+    <div class="topbar-left">
+      <span class="admin-badge">ADMIN</span>
+      <h1>ESG 永續學習平台 <span>／ 管理後台</span></h1>
     </div>
-    <div class="header-right">
+    <div class="topbar-right">
       <span id="admin-email"></span>
       <button id="btn-logout">登出</button>
     </div>
-  </header>
+  </div>
+
   <main>
+    <!-- STAT CARDS -->
     <div class="stats-grid">
-      <div class="stat-card c-green"><div class="stat-label">總使用者數</div><div class="stat-value" id="s-users">—</div><div class="stat-sub">已登入並同步資料</div></div>
-      <div class="stat-card c-blue"><div class="stat-label">總考試次數</div><div class="stat-value" id="s-exams">—</div><div class="stat-sub">所有考試模式合計</div></div>
-      <div class="stat-card c-orange"><div class="stat-label">平均答對率</div><div class="stat-value" id="s-avg">—</div><div class="stat-sub">全體使用者平均</div></div>
-      <div class="stat-card c-red"><div class="stat-label">通過率</div><div class="stat-value" id="s-pass">—</div><div class="stat-sub">答對率 ≥ 70% 計通過</div></div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">總使用者數</div>
+        <div class="stat-value v-green" id="s-users">—</div>
+        <div class="stat-sub">已登入並同步資料</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-label">總考試次數</div>
+        <div class="stat-value v-blue" id="s-exams">—</div>
+        <div class="stat-sub">所有考試模式合計</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-label">平均答對率</div>
+        <div class="stat-value v-orange" id="s-avg">—</div>
+        <div class="stat-sub">全體使用者平均</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-label">通過率</div>
+        <div class="stat-value v-teal" id="s-pass">—</div>
+        <div class="stat-sub">答對率 ≥ 70% 計通過</div>
+      </div>
     </div>
+
+    <!-- TABLE -->
     <div class="section-header">
       <span class="section-title">使用者列表</span>
       <button id="btn-refresh">
@@ -148,11 +273,18 @@
         重新整理
       </button>
     </div>
+
     <div class="table-wrap">
       <div id="loading"><div class="spinner"></div><span>讀取使用者資料中…</span></div>
       <table id="users-table" style="display:none">
         <thead><tr>
-          <th>名稱</th><th>Email</th><th>考試次數</th><th>最近考試</th><th>最高分</th><th>平均答對率</th><th>通過</th>
+          <th>名稱</th>
+          <th>Email</th>
+          <th>考試次數</th>
+          <th>最近考試</th>
+          <th>最高分</th>
+          <th>平均答對率</th>
+          <th>通過</th>
         </tr></thead>
         <tbody id="users-tbody"></tbody>
       </table>
@@ -161,8 +293,7 @@
 </div>
 
 <!-- ════════════════════════════════════
-     ⚠️  把 firebaseConfig 換成你的設定
-     來源：index.html 裡的 firebaseConfig
+     ⚠️  firebaseConfig 換成你的設定
      ════════════════════════════════════ -->
 <script type="module">
 import { initializeApp }
@@ -172,21 +303,21 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signO
 import { getDatabase, ref, get }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAzY_dPwuap8_SCDhAvEJ2d_H_pETKp_M8",
-      authDomain: "esg-learning-and-practice.firebaseapp.com",
-      databaseURL: "https://esg-learning-and-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "esg-learning-and-practice",
-      storageBucket: "esg-learning-and-practice.firebasestorage.app",
-      messagingSenderId: "640671358038",
-      appId: "1:640671358038:web:d71c2ec7f4c28b02396ff7"
-    };
+const firebaseConfig = {
+  apiKey:            "AIzaSyAzY_dPwuap8_SCDhAvEJ2d_H_pETKp_M8",
+  authDomain:        "esg-learning-and-practice.firebaseapp.com",
+  databaseURL:       "https://esg-learning-and-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "esg-learning-and-practice",
+  storageBucket:     "esg-learning-and-practice.firebasestorage.app",
+  messagingSenderId: "640671358038",
+  appId:             "1:640671358038:web:d71c2ec7f4c28b02396ff7"
+};
 
 const ADMIN_EMAILS = ["evil1203@gmail.com"];
 
 const CH_LABELS = {ch1:'第一章',ch2:'第二章',ch3:'第三章',ch4:'第四章'};
-const CH_COLORS = {ch1:'#58a6ff',ch2:'#3fb950',ch3:'#d29922',ch4:'#bc8cff'};
-const BAR_COLORS = ['#3fb950','#d29922','#f85149','#58a6ff','#bc8cff','#79c0ff'];
+const CH_COLORS = {ch1:'#89b4d4',ch2:'#3fa068',ch3:'#c87848',ch4:'#8872b8'};
+const BAR_COLORS = ['#3fa068','#c87848','#b71c1c','#89b4d4','#8872b8','#4a9480'];
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -230,10 +361,10 @@ async function loadData() {
     const users = Object.entries(raw).map(([uid,data]) => {
       let p={};
       try { p = typeof data.progress==='string' ? JSON.parse(data.progress) : (data.progress||{}); } catch{}
-      const history = p.history||[], chStats = p.chStats||{}, secStats = p.secStats||{};
+      const history  = p.history||[], chStats = p.chStats||{}, secStats = p.secStats||{};
       const email       = data.profile?.email       || '';
       const displayName = data.profile?.displayName || '';
-      const scores  = history.map(h=>h.pct||0);
+      const scores = history.map(h=>h.pct||0);
       return { uid, email, displayName, history, chStats, secStats,
         examCount : history.length,
         lastDate  : history.length ? history[history.length-1].date : '—',
@@ -252,7 +383,7 @@ async function loadData() {
 }
 
 function renderStats(users) {
-  const all = users.flatMap(u=>u.history.map(h=>h.pct||0));
+  const all  = users.flatMap(u=>u.history.map(h=>h.pct||0));
   const avg  = all.length ? all.reduce((a,b)=>a+b,0)/all.length : 0;
   const pass = all.length ? all.filter(s=>s>=70).length/all.length*100 : 0;
   document.getElementById('s-users').textContent = users.length;
@@ -265,26 +396,33 @@ function renderTable(users) {
   const tbody = document.getElementById('users-tbody');
   tbody.innerHTML='';
   users.forEach((u,idx)=>{
+    const scoreColor = u.maxScore>=70 ? 'var(--green)' : (u.maxScore>=50?'var(--orange)':'var(--red)');
     const tr = document.createElement('tr');
     tr.innerHTML=`
       <td>
-        <div style="font-size:13px;font-weight:500">${u.displayName || '<span style="color:var(--subtle)">—</span>'}</div>
-        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px" title="${u.uid}">${u.uid.slice(0,12)}…</div>
+        <div class="user-name">${u.displayName || '<span style="color:#bbb">未設定</span>'}</div>
+        <div class="user-uid" title="${u.uid}">${u.uid.slice(0,14)}…</div>
       </td>
-      <td style="font-size:12px;color:var(--muted)">${u.email || '<span style="color:var(--subtle)">未知</span>'}</td>
+      <td class="user-email">${u.email || '<span style="color:#bbb">—</span>'}</td>
       <td><span class="badge badge-gray">${u.examCount} 次</span></td>
-      <td style="color:var(--muted);font-size:12px">${u.lastDate}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${u.maxScore>=70?'var(--green)':'var(--orange)'}">${u.maxScore.toFixed(1)}%</td>
+      <td style="font-size:12px;color:var(--gray)">${u.lastDate}</td>
+      <td style="font-weight:800;color:${scoreColor}">${u.maxScore.toFixed(1)}%</td>
       <td>
-        <div class="pass-bar-bg"><div class="pass-bar-fill" style="width:${Math.min(u.avgScore,100).toFixed(1)}%"></div></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace">${u.avgScore.toFixed(1)}%</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${Math.min(u.avgScore,100).toFixed(1)}%"></div></div>
+          <div class="score-text">${u.avgScore.toFixed(1)}%</div>
+        </div>
       </td>
-      <td>${u.passCount>0?`<span class="badge badge-green">✓ ${u.passCount} 次</span>`:`<span class="badge badge-gray">未通過</span>`}</td>`;
+      <td>${u.passCount>0
+        ? `<span class="badge badge-green">✓ ${u.passCount} 次</span>`
+        : `<span class="badge badge-gray">未通過</span>`}</td>`;
     tr.addEventListener('click',()=>toggleExpand(idx));
 
     const exp=document.createElement('tr');
     exp.className='expand-row'; exp.id=`expand-${idx}`;
-    exp.innerHTML=`<td colspan="6" class="expand-cell"><div class="expand-inner">${renderChStats(u)}${renderHistory(u)}</div></td>`;
+    exp.innerHTML=`<td colspan="7" class="expand-cell">
+      <div class="expand-inner">${renderChStats(u)}${renderHistory(u)}</div>
+    </td>`;
     tbody.appendChild(tr); tbody.appendChild(exp);
   });
 }
@@ -294,28 +432,61 @@ function toggleExpand(idx) {
   const was=row.classList.contains('open');
   document.querySelectorAll('.expand-row.open').forEach(r=>r.classList.remove('open'));
   document.querySelectorAll('tbody tr.expanded').forEach(r=>r.classList.remove('expanded'));
-  if(!was){row.classList.add('open');row.previousElementSibling.classList.add('expanded');}
+  if(!was){ row.classList.add('open'); row.previousElementSibling.classList.add('expanded'); }
 }
 
 function renderChStats(u) {
   const chHtml = Object.entries(u.chStats).map(([ch,s])=>{
-    const pct=s.total?(s.correct/s.total*100):0, c=CH_COLORS[ch]||'#8b949e';
-    return `<div class="ch-bar-item"><div class="ch-bar-label">${CH_LABELS[ch]||ch}</div><div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div><div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div></div>`;
+    const pct=s.total?(s.correct/s.total*100):0, c=CH_COLORS[ch]||'#aaa';
+    return `<div class="ch-bar-item">
+      <div class="ch-bar-label">${CH_LABELS[ch]||ch}</div>
+      <div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div>
+      <div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div>
+    </div>`;
   }).join('');
   const secHtml = Object.entries(u.secStats).map(([name,s],i)=>{
     const pct=s.total?(s.correct/s.total*100):0, c=BAR_COLORS[i%BAR_COLORS.length];
-    return `<div class="ch-bar-item"><div class="ch-bar-label" title="${name}">${name}</div><div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div><div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div></div>`;
+    return `<div class="ch-bar-item">
+      <div class="ch-bar-label" title="${name}">${name}</div>
+      <div class="ch-bar-track"><div class="ch-bar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div>
+      <div class="ch-bar-pct" style="color:${c}">${pct.toFixed(0)}%</div>
+    </div>`;
   }).join('');
-  return `<div><div class="panel-title">章節表現</div><div class="ch-bar-list">${chHtml||'<span style="color:var(--subtle);font-size:12px">無資料</span>'}</div><div class="panel-title" style="margin-top:18px">各節表現</div><div class="ch-bar-list">${secHtml||'<span style="color:var(--subtle);font-size:12px">無資料</span>'}</div></div>`;
+  return `<div>
+    <div class="panel-title">章節表現</div>
+    <div class="ch-bar-list">${chHtml||'<span style="color:#bbb;font-size:12px">無資料</span>'}</div>
+    <div class="panel-title" style="margin-top:18px">各節表現</div>
+    <div class="ch-bar-list">${secHtml||'<span style="color:#bbb;font-size:12px">無資料</span>'}</div>
+  </div>`;
 }
 
 function renderHistory(u) {
-  if(!u.history.length) return `<div><div class="panel-title">考試紀錄</div><div class="empty-state" style="padding:24px">尚無考試紀錄</div></div>`;
+  if(!u.history.length) return `<div>
+    <div class="panel-title">考試紀錄</div>
+    <div class="empty-state" style="padding:20px">尚無考試紀錄</div>
+  </div>`;
   const items=[...u.history].reverse().map(h=>{
-    const pct=(h.pct||0).toFixed(1), color=h.passed?'var(--green)':((h.pct||0)>=50?'var(--orange)':'var(--red)');
-    return `<div class="history-item"><div><div class="history-date">${h.date}</div><div class="history-type">${h.type||'考試'}</div></div><div style="text-align:center"><div class="history-score" style="color:${color}">${pct}%</div><div class="history-total">${h.correct}/${h.total}</div></div>${h.passed?`<span class="badge badge-green" style="font-size:10px">通過</span>`:`<span class="badge badge-gray" style="font-size:10px">未通過</span>`}</div>`;
+    const pct=(h.pct||0).toFixed(1);
+    const color=h.passed?'var(--green)':((h.pct||0)>=50?'var(--orange)':'var(--red)');
+    const bg   =h.passed?'var(--gp)':((h.pct||0)>=50?'var(--op)':'var(--rp)');
+    return `<div class="history-item">
+      <div>
+        <div class="history-date">${h.date}</div>
+        <div class="history-type">${h.type||'考試'}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="history-score" style="color:${color}">${pct}%</div>
+        <div class="history-total">${h.correct}／${h.total}</div>
+      </div>
+      <span class="badge" style="background:${bg};color:${color};border:1px solid ${color}40;font-size:10px">
+        ${h.passed?'✓ 通過':'未通過'}
+      </span>
+    </div>`;
   }).join('');
-  return `<div><div class="panel-title">考試紀錄（最新在上）</div><div class="history-list">${items}</div></div>`;
+  return `<div>
+    <div class="panel-title">考試紀錄（最新在上）</div>
+    <div class="history-list">${items}</div>
+  </div>`;
 }
 </script>
 </body>
