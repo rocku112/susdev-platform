@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>永續發展學習平台 · SunDown Studio 日落工作室</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>永續發展基礎能力測驗 學習平台</title>
 <style>
 /* ═══════════════════════════════════════════
    CSS VARIABLES & RESET
@@ -28,12 +26,7 @@
   --header-h:56px;--bottom-nav-h:60px;
   --shadow:0 2px 12px rgba(0,0,0,.1);--shadow-lg:0 4px 24px rgba(0,0,0,.15);
   --radius:12px;--radius-sm:8px;
-  --font:'Outfit','Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif;
-  --mono:'DM Mono','Consolas',monospace;
-  /* SunDown Studio brand */
-  --sd-navy:#2D4A6E; --sd-gold:#E8B84B; --sd-navy-muted:rgba(45,74,110,.10);
-}
-:root_placeholder{
+  --font:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;
   --transition:.2s ease;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -51,7 +44,6 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
   position:fixed;top:0;left:0;bottom:0;z-index:200;
   display:flex;flex-direction:column;
   transition:transform var(--transition);overflow-y:auto;
-  padding-bottom:env(safe-area-inset-bottom,0);
 }
 #sidebar-header{padding:20px 18px 14px;border-bottom:1px solid #ede8e0;}
 
@@ -166,7 +158,6 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
   #sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg);}
   #sidebar.open{transform:translateX(0);}
   #main{margin-left:0;padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
-  #sidebar{padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
   #menu-btn{display:block;}
   #bottom-nav{display:flex;}
   .reader-body{padding:22px 24px;max-width:100%;}
@@ -178,7 +169,6 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
   #sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg);}
   #sidebar.open{transform:translateX(0);}
   #main{margin-left:0;padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
-  #sidebar{padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
   #menu-btn{display:block;}
   #bottom-nav{display:flex;}
   .stats-grid{grid-template-columns:repeat(4,1fr);}
@@ -190,7 +180,6 @@ body{font-family:var(--font);background:var(--bg);color:#263238;overflow-x:hidde
   #sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg);}
   #sidebar.open{transform:translateX(0);}
   #main{margin-left:0;padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
-  #sidebar{padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}
   #menu-btn{display:block;}
   #bottom-nav{display:flex;}
   #content{padding:16px 14px;}
@@ -2563,25 +2552,7 @@ ul.s-list > li::before{
 .tx-acc-tag.t-card    {background:#E6F1FB;color:#0C447C}
 .tx-acc-tag.t-risk    {background:#FAEEDA;color:#633806}
 .tx-acc-tag.t-eco     {background:#EAF3DE;color:#27500A}
-.tx-acc-detail{font-size:13px;color:#444;line-height:1.75;padding:10px 0 2px}/* ── SunDown Studio footer ── */
-#sd-footer{margin-left:var(--sidebar-w);background:var(--card);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:8px;flex-shrink:0;}
-#sd-footer .sd-lock{width:11px;height:11px;opacity:.4;flex-shrink:0;}
-#sd-footer .sd-text{font-size:.7rem;color:#b0a898;font-weight:500;}
-#sd-footer .sd-brand{font-weight:700;color:var(--sd-navy);opacity:.75;}
-#sd-footer .sd-dot{color:var(--border);margin:0 4px;}
-@media(max-width:640px){#sd-footer{margin-left:0;flex-wrap:wrap;gap:4px;padding-bottom:calc(var(--bottom-nav-h) + 10px);}#sidebar{padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));}}
-
-/* ── Topbar auth ── */
-#topbar-auth{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-#tb-login-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.78rem;font-weight:600;color:#444;font-family:var(--font);transition:background .15s,border-color .15s;}
-#tb-login-btn:hover{background:var(--lgray);border-color:#c5bfb5;}
-#tb-user{display:none;align-items:center;gap:7px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .15s;}
-#tb-user:hover{background:var(--lgray);}
-#tb-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);background:var(--gp);}
-#tb-avatar-fallback{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0;}
-#tb-name{font-size:.78rem;font-weight:600;color:#2a221a;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#tb-logout-tip{font-size:.68rem;color:var(--gray);}
-@media(max-width:640px){#tb-name,#tb-logout-tip{display:none;}#tb-login-btn span.tb-login-text{display:none;}}
+.tx-acc-detail{font-size:13px;color:#444;line-height:1.75;padding:10px 0 2px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
 
@@ -2669,20 +2640,11 @@ ul.s-list > li::before{
 <aside id="sidebar">
   <div id="sidebar-header">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-      <!-- SunDown Studio brand mark -->
-      <div style="width:36px;height:36px;border-radius:9px;background:var(--sd-navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="14" cy="14" r="13" fill="#2D4A6E"/>
-          <path d="M2 14 A12 12 0 0 1 26 14" fill="#E8B84B"/>
-          <line x1="4" y1="16" x2="24" y2="16" stroke="#fff" stroke-width="1.4" opacity=".85"/>
-          <line x1="5" y1="18.5" x2="23" y2="18.5" stroke="#fff" stroke-width="1.4" opacity=".7"/>
-          <line x1="7" y1="21" x2="21" y2="21" stroke="#fff" stroke-width="1.4" opacity=".55"/>
-          <line x1="9.5" y1="23.5" x2="18.5" y2="23.5" stroke="#fff" stroke-width="1.4" opacity=".4"/>
-        </svg>
-      </div>
+      <div style="width:34px;height:34px;border-radius:10px;background:rgba(27,94,32,.12);
+        display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#2e7a52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M2 16s3-1 6-3c3.5-2.3 4.5-5 4.5-5S10 13 8 15c-2.1 2.1-6 3-6 3z"/><path d="M22 2s-5 2-8 7c-2.3 3.5-2 7-2 7s2-3.5 5-6c3.1-2.6 5-8 5-8z"/></svg></div>
       <div>
-        <div style="font-size:.82rem;font-weight:800;line-height:1.2;color:var(--sd-navy);">SunDown <span style="color:var(--sd-gold);">Studio</span></div>
-        <div style="font-size:.67rem;color:#b0a898;margin-top:1px;letter-spacing:.05em;font-weight:600;">永續發展學習平台</div>
+        <div style="font-size:.92rem;font-weight:700;line-height:1.25;color:#2a221a;">永續發展學習平台</div>
+        <div style="font-size:.68rem;color:#b0a898;margin-top:2px;letter-spacing:.03em;">基礎能力測驗備考系統</div>
       </div>
     </div>
   </div>
@@ -2704,8 +2666,40 @@ ul.s-list > li::before{
     <div class="nav-section-label">進度管理</div>
     <div class="nav-item" data-page="progress"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>學習進度</div>
 
+  <!-- 登入狀態面板 -->
+  <div id="auth-panel" style="margin:12px;padding:10px 12px;border-radius:10px;
+    background:#f3ede4;border:1px solid #e5ddd2;">
+    <div id="auth-logged-out" style="text-align:center;">
+      <div style="font-size:.75rem;color:var(--gray);margin-bottom:8px;">登入以跨裝置同步進度</div>
+      <button onclick="fbSignIn()" style="width:100%;padding:7px;border-radius:8px;
+        border:1px solid var(--border);background:#fff;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;gap:6px;font-size:.8rem;font-family:var(--font);">
+        <svg width="14" height="14" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.2l7.9 6.1C12.4 13 17.8 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.1z"/>
+          <path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7L2.4 13.2A23.9 23.9 0 0 0 0 24c0 3.8.9 7.4 2.5 10.6l8-5.9z"/>
+          <path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.6-5.9c-2 1.4-4.6 2.2-7.6 2.2-6.2 0-11.5-4.2-13.4-9.8l-8 5.9C6.5 42.5 14.6 48 24 48z"/>
+        </svg>
+        Google 登入
+      </button>
+    </div>
+    <div id="auth-logged-in" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <img id="auth-avatar" src="" width="24" height="24"
+          style="border-radius:50%;flex-shrink:0;" onerror="this.style.display='none'">
+        <span id="auth-name" style="font-size:.78rem;font-weight:600;
+          overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2a221a;"></span>
+      </div>
+      <div style="font-size:.7rem;color:var(--gray);margin-bottom:6px;"><span class="cloud-icon" style="display:inline-flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg> 進度已雲端同步</span></div>
+      <button onclick="fbSignOut()" style="width:100%;padding:5px;border-radius:6px;
+        border:1px solid var(--border);background:transparent;cursor:pointer;
+        font-size:.75rem;color:var(--gray);font-family:var(--font);">登出</button>
+    </div>
+  </div>
+
   </nav>
   <div id="sidebar-reading-ctx" style="display:none;padding:6px 18px 0;font-size:.72rem;color:var(--gll);line-height:1.4;border-top:1px solid rgba(0,0,0,.06);margin:0 0 4px;"></div>
+  <div id="sidebar-footer"></div>
 
   <!-- ══ 側欄底部播放器（桌機專用，JS 控制顯示） -->
 
@@ -2723,22 +2717,6 @@ ul.s-list > li::before{
     </div>
     <div id="topbar-right">
       <span id="topbar-stats" style="font-size:.8rem;color:var(--gray);"></span>
-      <div id="topbar-auth">
-        <!-- Logged out -->
-        <button id="tb-login-btn" onclick="fbSignIn()">
-          <svg width="14" height="14" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.2l7.9 6.1C12.4 13 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.1z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7L2.4 13.2A23.9 23.9 0 0 0 0 24c0 3.8.9 7.4 2.5 10.6l8-5.9z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.6-5.9c-2 1.4-4.6 2.2-7.6 2.2-6.2 0-11.5-4.2-13.4-9.8l-8 5.9C6.5 42.5 14.6 48 24 48z"/></svg>
-          <span class="tb-login-text">登入</span>
-        </button>
-        <!-- Logged in -->
-        <div id="tb-user" onclick="fbSignOut()" title="點擊登出">
-          <img id="tb-avatar" src="" alt="" onerror="this.style.display='none';document.getElementById('tb-avatar-fallback').style.display='flex'">
-          <div id="tb-avatar-fallback" style="display:none;"></div>
-          <div>
-            <div id="tb-name"></div>
-            <div id="tb-logout-tip">點擊登出</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -2828,7 +2806,7 @@ ul.s-list > li::before{
 
     <!-- ══ READER PAGE ════════════════════════ -->
     <div id="page-reader" class="page">
-      
+      <div style="display:flex;gap:10px;margin-bottom:12px;justify-content:flex-end;"><button id="expand-all-btn" onclick="toggleExpandAll()" type="button" style="font-size:.78rem;font-weight:600;padding:6px 14px;border-radius:8px;background:var(--lgray);border:1.5px solid var(--border);cursor:pointer;color:var(--gray);transition:all .2s;" onmouseover="this.style.background='var(--gp)'" onmouseout="this.style.background='var(--lgray)'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#89b4d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> 全部展開</button></div>
       <div class="reader-tabs">
         <button class="reader-tab active" onclick="switchReaderTab('read')"><span class='reader-tab-icon'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> 精華筆記</button>
         <button class="reader-tab" onclick="switchReaderTab('practice')"><span class='reader-tab-icon'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> 隨堂練習 <span class="rq-badge" id="rq-badge"></span></button>
@@ -6165,17 +6143,7 @@ function goPage(id){
     [PAGES.PROGRESS]:  renderProgress,
     [PAGES.HOME]:      renderHome,
     [PAGES.TEXTBOOK]:  initTextbook,
-    [PAGES.TEXTBOOK2]: function(){
-    _txEnsureChapter(0); // 第一章立即載入，使用者馬上看到內容
-    // 其餘章節分幀載入，避免阻塞主執行緒
-    requestAnimationFrame(()=>{
-      _txEnsureChapter(1);
-      requestAnimationFrame(()=>{
-        _txEnsureChapter(2);
-        requestAnimationFrame(()=>{ _txEnsureChapter(3); });
-      });
-    });
-  },
+    [PAGES.TEXTBOOK2]: function(){ for(let i=0;i<4;i++) _txEnsureChapter(i); },
     [PAGES.EXAM]:      renderExamHistory,
     [PAGES.PODCAST]:   initPodcast,
     [PAGES.CHARTS]:    _initChartsPage,
@@ -6216,7 +6184,28 @@ function toggleFullText(uid){
   _saveFoldState(uid, isOpen);
 }
 
-/* 功能二：全部展開/收合 已移除 */
+/* 功能二：全部展開 / 全部收合 */
+function expandAllFullText(open){
+  document.querySelectorAll('.full-text-body').forEach(body => {
+    const btn = body.previousElementSibling;
+    if(open){
+      body.classList.add('open');
+      if(btn) btn.classList.add('open');
+    } else {
+      body.classList.remove('open');
+      if(btn) btn.classList.remove('open');
+    }
+  });
+  // 更新全展開/收合按鈕文字
+  const allBtn = document.getElementById('expand-all-btn');
+  if(allBtn) allBtn.innerHTML = open ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#89b4d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0;"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 全部收合' : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#89b4d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> 全部展開';
+  _allExpanded = open;
+}
+let _allExpanded = false;
+function toggleExpandAll(){
+  _allExpanded = !_allExpanded;
+  expandAllFullText(_allExpanded);
+}
 
 /* 功能三：進度記憶（localStorage） */
 const FOLD_STORE = 'susdev_fold_v1';
@@ -9850,22 +9839,19 @@ document.getElementById('tx-body') && document.getElementById('tx-body').addEven
 
 // ── Firebase 登入狀態 UI 更新 ──────────────────────────────
 function _updateAuthUI(user) {
-  // Topbar auth
-  const tbLogin  = document.getElementById('tb-login-btn');
-  const tbUser   = document.getElementById('tb-user');
-  const tbAvatar = document.getElementById('tb-avatar');
-  const tbFallback = document.getElementById('tb-avatar-fallback');
-  const tbName   = document.getElementById('tb-name');
+  const loggedOut = document.getElementById('auth-logged-out');
+  const loggedIn  = document.getElementById('auth-logged-in');
+  const avatar    = document.getElementById('auth-avatar');
+  const nameEl    = document.getElementById('auth-name');
+  if(!loggedOut || !loggedIn) return;
   if(user) {
-    if(tbLogin)  tbLogin.style.display  = 'none';
-    if(tbUser)   tbUser.style.display   = 'flex';
-    if(tbAvatar && user.photoURL){ tbAvatar.src = user.photoURL; tbAvatar.style.display='block'; }
-    const initials = (user.displayName||user.email||'U').charAt(0).toUpperCase();
-    if(tbFallback) tbFallback.textContent = initials;
-    if(tbName)   tbName.textContent = user.displayName || user.email || '';
+    loggedOut.style.display = 'none';
+    loggedIn.style.display  = 'block';
+    if(avatar) avatar.src = user.photoURL || '';
+    if(nameEl) nameEl.textContent = user.displayName || user.email || '';
   } else {
-    if(tbLogin)  tbLogin.style.display  = 'flex';
-    if(tbUser)   tbUser.style.display   = 'none';
+    loggedOut.style.display = 'block';
+    loggedIn.style.display  = 'none';
   }
 }
 
@@ -9877,29 +9863,6 @@ function togTxAcc(id){
   document.querySelectorAll('.tx-acc-item').forEach(function(i){i.classList.remove('open');});
   if(!isOpen) el.classList.add('open');
 }
-
-// ── 背景預熱永續課文（頁面載入後 3 秒靜默完成，之後點入課文頁是瞬間）──
-(function _txPrewarm(){
-  const run = () => {
-    // 分幀預載入，絕不阻塞首頁渲染
-    requestAnimationFrame(()=>{
-      _txEnsureChapter(0);
-      requestAnimationFrame(()=>{
-        _txEnsureChapter(1);
-        requestAnimationFrame(()=>{
-          _txEnsureChapter(2);
-          requestAnimationFrame(()=>{ _txEnsureChapter(3); });
-        });
-      });
-    });
-  };
-  // 等首頁渲染穩定後再預熱（用 requestIdleCallback 最優雅；不支援則 setTimeout 3s）
-  if(window.requestIdleCallback){
-    requestIdleCallback(run, {timeout: 5000});
-  } else {
-    setTimeout(run, 3000);
-  }
-})();
 </script>
 
 <!-- 回到題目浮動按鈕 -->
@@ -9908,17 +9871,5 @@ function togTxAcc(id){
   <span>回到題目</span>
   <span class="rq-label" id="return-to-q-label"></span>
 </button>
-
-<!-- SunDown Studio footer -->
-<footer id="sd-footer">
-  <svg class="sd-lock" viewBox="0 0 28 28" fill="none" style="width:16px;height:16px;flex-shrink:0;">
-    <circle cx="14" cy="14" r="13" fill="#2D4A6E"/>
-    <path d="M2 14 A12 12 0 0 1 26 14" fill="#E8B84B"/>
-    <line x1="5" y1="17" x2="23" y2="17" stroke="#fff" stroke-width="1.5" opacity=".85"/>
-    <line x1="7" y1="20" x2="21" y2="20" stroke="#fff" stroke-width="1.5" opacity=".65"/>
-    <line x1="9.5" y1="23" x2="18.5" y2="23" stroke="#fff" stroke-width="1.5" opacity=".45"/>
-  </svg>
-  <span class="sd-text"><span class="sd-brand">SunDown Studio</span> © 日落工作室 · 永續發展學習平台</span>
-</footer>
 </body>
 </html>
